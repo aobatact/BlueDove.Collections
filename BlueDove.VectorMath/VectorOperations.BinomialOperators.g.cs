@@ -12,8 +12,8 @@ namespace BlueDove.VectorMath
         private struct FloatAdd : IBinomialOperator<float>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public float Calc(float l, float r)
-                => l + r;
+            public float Calc(float left, float right)
+                => left + right;
 
             public bool IsSupported
             {
@@ -25,8 +25,8 @@ namespace BlueDove.VectorMath
         private struct FloatAddSse : IBinomialOperator<Vector128<float>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector128<float> Calc(Vector128<float> l, Vector128<float> r)
-                => Sse.Add(l, r);
+            public Vector128<float> Calc(Vector128<float> left, Vector128<float> right)
+                => Sse.Add(left, right);
 
             public bool IsSupported
             {
@@ -38,8 +38,8 @@ namespace BlueDove.VectorMath
         private struct FloatAddAvx : IBinomialOperator<Vector256<float>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<float> Calc(Vector256<float> l, Vector256<float> r)
-                => Avx.Add(l, r);
+            public Vector256<float> Calc(Vector256<float> left, Vector256<float> right)
+                => Avx.Add(left, right);
 
             public bool IsSupported
             {
@@ -51,8 +51,8 @@ namespace BlueDove.VectorMath
         private struct FloatSubtract : IBinomialOperator<float>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public float Calc(float l, float r)
-                => l - r;
+            public float Calc(float left, float right)
+                => left - right;
 
             public bool IsSupported
             {
@@ -64,8 +64,8 @@ namespace BlueDove.VectorMath
         private struct FloatSubtractSse : IBinomialOperator<Vector128<float>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector128<float> Calc(Vector128<float> l, Vector128<float> r)
-                => Sse.Subtract(l, r);
+            public Vector128<float> Calc(Vector128<float> left, Vector128<float> right)
+                => Sse.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -77,8 +77,8 @@ namespace BlueDove.VectorMath
         private struct FloatSubtractAvx : IBinomialOperator<Vector256<float>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<float> Calc(Vector256<float> l, Vector256<float> r)
-                => Avx.Subtract(l, r);
+            public Vector256<float> Calc(Vector256<float> left, Vector256<float> right)
+                => Avx.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -90,8 +90,8 @@ namespace BlueDove.VectorMath
         private struct FloatMultiply : IBinomialOperator<float>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public float Calc(float l, float r)
-                => l * r;
+            public float Calc(float left, float right)
+                => left * right;
 
             public bool IsSupported
             {
@@ -103,8 +103,8 @@ namespace BlueDove.VectorMath
         private struct FloatMultiplySse : IBinomialOperator<Vector128<float>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector128<float> Calc(Vector128<float> l, Vector128<float> r)
-                => Sse.Multiply(l, r);
+            public Vector128<float> Calc(Vector128<float> left, Vector128<float> right)
+                => Sse.Multiply(left, right);
 
             public bool IsSupported
             {
@@ -116,8 +116,8 @@ namespace BlueDove.VectorMath
         private struct FloatMultiplyAvx : IBinomialOperator<Vector256<float>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<float> Calc(Vector256<float> l, Vector256<float> r)
-                => Avx.Multiply(l, r);
+            public Vector256<float> Calc(Vector256<float> left, Vector256<float> right)
+                => Avx.Multiply(left, right);
 
             public bool IsSupported
             {
@@ -129,8 +129,8 @@ namespace BlueDove.VectorMath
         private struct FloatDivide : IBinomialOperator<float>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public float Calc(float l, float r)
-                => l / r;
+            public float Calc(float left, float right)
+                => left / right;
 
             public bool IsSupported
             {
@@ -142,8 +142,8 @@ namespace BlueDove.VectorMath
         private struct FloatDivideSse : IBinomialOperator<Vector128<float>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector128<float> Calc(Vector128<float> l, Vector128<float> r)
-                => Sse.Divide(l, r);
+            public Vector128<float> Calc(Vector128<float> left, Vector128<float> right)
+                => Sse.Divide(left, right);
 
             public bool IsSupported
             {
@@ -155,8 +155,8 @@ namespace BlueDove.VectorMath
         private struct FloatDivideAvx : IBinomialOperator<Vector256<float>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<float> Calc(Vector256<float> l, Vector256<float> r)
-                => Avx.Divide(l, r);
+            public Vector256<float> Calc(Vector256<float> left, Vector256<float> right)
+                => Avx.Divide(left, right);
 
             public bool IsSupported
             {
@@ -165,24 +165,11 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct FloatRem : IBinomialOperator<float>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public float Calc(float l, float r)
-                => l % r;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
         private struct DoubleAdd : IBinomialOperator<double>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Calc(double l, double r)
-                => l + r;
+            public double Calc(double left, double right)
+                => left + right;
 
             public bool IsSupported
             {
@@ -194,8 +181,8 @@ namespace BlueDove.VectorMath
         private struct DoubleAddSse2 : IBinomialOperator<Vector128<double>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector128<double> Calc(Vector128<double> l, Vector128<double> r)
-                => Sse2.Add(l, r);
+            public Vector128<double> Calc(Vector128<double> left, Vector128<double> right)
+                => Sse2.Add(left, right);
 
             public bool IsSupported
             {
@@ -207,8 +194,8 @@ namespace BlueDove.VectorMath
         private struct DoubleAddAvx : IBinomialOperator<Vector256<double>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<double> Calc(Vector256<double> l, Vector256<double> r)
-                => Avx.Add(l, r);
+            public Vector256<double> Calc(Vector256<double> left, Vector256<double> right)
+                => Avx.Add(left, right);
 
             public bool IsSupported
             {
@@ -220,8 +207,8 @@ namespace BlueDove.VectorMath
         private struct DoubleSubtract : IBinomialOperator<double>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Calc(double l, double r)
-                => l - r;
+            public double Calc(double left, double right)
+                => left - right;
 
             public bool IsSupported
             {
@@ -233,8 +220,8 @@ namespace BlueDove.VectorMath
         private struct DoubleSubtractSse2 : IBinomialOperator<Vector128<double>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector128<double> Calc(Vector128<double> l, Vector128<double> r)
-                => Sse2.Subtract(l, r);
+            public Vector128<double> Calc(Vector128<double> left, Vector128<double> right)
+                => Sse2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -246,8 +233,8 @@ namespace BlueDove.VectorMath
         private struct DoubleSubtractAvx : IBinomialOperator<Vector256<double>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<double> Calc(Vector256<double> l, Vector256<double> r)
-                => Avx.Subtract(l, r);
+            public Vector256<double> Calc(Vector256<double> left, Vector256<double> right)
+                => Avx.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -259,8 +246,8 @@ namespace BlueDove.VectorMath
         private struct DoubleMultiply : IBinomialOperator<double>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Calc(double l, double r)
-                => l * r;
+            public double Calc(double left, double right)
+                => left * right;
 
             public bool IsSupported
             {
@@ -272,8 +259,8 @@ namespace BlueDove.VectorMath
         private struct DoubleMultiplySse2 : IBinomialOperator<Vector128<double>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector128<double> Calc(Vector128<double> l, Vector128<double> r)
-                => Sse2.Multiply(l, r);
+            public Vector128<double> Calc(Vector128<double> left, Vector128<double> right)
+                => Sse2.Multiply(left, right);
 
             public bool IsSupported
             {
@@ -285,8 +272,8 @@ namespace BlueDove.VectorMath
         private struct DoubleMultiplyAvx : IBinomialOperator<Vector256<double>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<double> Calc(Vector256<double> l, Vector256<double> r)
-                => Avx.Multiply(l, r);
+            public Vector256<double> Calc(Vector256<double> left, Vector256<double> right)
+                => Avx.Multiply(left, right);
 
             public bool IsSupported
             {
@@ -298,8 +285,8 @@ namespace BlueDove.VectorMath
         private struct DoubleDivide : IBinomialOperator<double>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Calc(double l, double r)
-                => l / r;
+            public double Calc(double left, double right)
+                => left / right;
 
             public bool IsSupported
             {
@@ -311,8 +298,8 @@ namespace BlueDove.VectorMath
         private struct DoubleDivideSse2 : IBinomialOperator<Vector128<double>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector128<double> Calc(Vector128<double> l, Vector128<double> r)
-                => Sse2.Divide(l, r);
+            public Vector128<double> Calc(Vector128<double> left, Vector128<double> right)
+                => Sse2.Divide(left, right);
 
             public bool IsSupported
             {
@@ -324,8 +311,8 @@ namespace BlueDove.VectorMath
         private struct DoubleDivideAvx : IBinomialOperator<Vector256<double>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<double> Calc(Vector256<double> l, Vector256<double> r)
-                => Avx.Divide(l, r);
+            public Vector256<double> Calc(Vector256<double> left, Vector256<double> right)
+                => Avx.Divide(left, right);
 
             public bool IsSupported
             {
@@ -334,11 +321,11 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct DoubleRem : IBinomialOperator<double>
+        private struct SByteAdd : IBinomialOperator<sbyte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public double Calc(double l, double r)
-                => l % r;
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)((int)left + (int)right);
 
             public bool IsSupported
             {
@@ -347,24 +334,24 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct SByteAdd : IBinomialOperator<sbyte>
+        private struct SByteAddSse2 : IBinomialOperator<Vector128<sbyte>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public sbyte Calc(sbyte l, sbyte r)
-                => (sbyte)((int)l + (int)r);
+            public Vector128<sbyte> Calc(Vector128<sbyte> left, Vector128<sbyte> right)
+                => Sse2.Add(left, right);
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
+                get => Sse2.IsSupported;
             }
         }
 
         private struct SByteAddAvx2 : IBinomialOperator<Vector256<sbyte>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<sbyte> Calc(Vector256<sbyte> l, Vector256<sbyte> r)
-                => Avx2.Add(l, r);
+            public Vector256<sbyte> Calc(Vector256<sbyte> left, Vector256<sbyte> right)
+                => Avx2.Add(left, right);
 
             public bool IsSupported
             {
@@ -376,8 +363,8 @@ namespace BlueDove.VectorMath
         private struct SByteSubtract : IBinomialOperator<sbyte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public sbyte Calc(sbyte l, sbyte r)
-                => (sbyte)((int)l - (int)r);
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)((int)left - (int)right);
 
             public bool IsSupported
             {
@@ -386,11 +373,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct SByteSubtractSse2 : IBinomialOperator<Vector128<sbyte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<sbyte> Calc(Vector128<sbyte> left, Vector128<sbyte> right)
+                => Sse2.Subtract(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct SByteSubtractAvx2 : IBinomialOperator<Vector256<sbyte>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<sbyte> Calc(Vector256<sbyte> l, Vector256<sbyte> r)
-                => Avx2.Subtract(l, r);
+            public Vector256<sbyte> Calc(Vector256<sbyte> left, Vector256<sbyte> right)
+                => Avx2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -402,8 +402,8 @@ namespace BlueDove.VectorMath
         private struct SByteMultiply : IBinomialOperator<sbyte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public sbyte Calc(sbyte l, sbyte r)
-                => (sbyte)((int)l * (int)r);
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)((int)left * (int)right);
 
             public bool IsSupported
             {
@@ -415,8 +415,8 @@ namespace BlueDove.VectorMath
         private struct SByteDivide : IBinomialOperator<sbyte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public sbyte Calc(sbyte l, sbyte r)
-                => (sbyte)((int)l / (int)r);
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)((int)left / (int)right);
 
             public bool IsSupported
             {
@@ -425,24 +425,128 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct SByteRem : IBinomialOperator<sbyte>
+        private struct SByteAnd : IBinomialOperator<sbyte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public sbyte Calc(sbyte l, sbyte r)
-                => (sbyte)((int)l % (int)r);
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)(left & right);
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => true;
+            }
+        }
+
+        private struct SByteAndSse2 : IBinomialOperator<Vector128<sbyte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<sbyte> Calc(Vector128<sbyte> left, Vector128<sbyte> right)
+                => Sse2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct SByteAndAvx2 : IBinomialOperator<Vector256<sbyte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<sbyte> Calc(Vector256<sbyte> left, Vector256<sbyte> right)
+                => Avx2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct SByteOr : IBinomialOperator<sbyte>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)(left & right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct SByteOrSse2 : IBinomialOperator<Vector128<sbyte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<sbyte> Calc(Vector128<sbyte> left, Vector128<sbyte> right)
+                => Sse2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct SByteOrAvx2 : IBinomialOperator<Vector256<sbyte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<sbyte> Calc(Vector256<sbyte> left, Vector256<sbyte> right)
+                => Avx2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct SByteXor : IBinomialOperator<sbyte>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)(left & right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct SByteXorSse2 : IBinomialOperator<Vector128<sbyte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<sbyte> Calc(Vector128<sbyte> left, Vector128<sbyte> right)
+                => Sse2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct SByteXorAvx2 : IBinomialOperator<Vector256<sbyte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<sbyte> Calc(Vector256<sbyte> left, Vector256<sbyte> right)
+                => Avx2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
             }
         }
 
         private struct ByteAdd : IBinomialOperator<byte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public byte Calc(byte l, byte r)
-                => (byte)((uint)l + (uint)r);
+            public byte Calc(byte left, byte right)
+                => (byte)((uint)left + (uint)right);
 
             public bool IsSupported
             {
@@ -451,11 +555,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct ByteAddSse2 : IBinomialOperator<Vector128<byte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<byte> Calc(Vector128<byte> left, Vector128<byte> right)
+                => Sse2.Add(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct ByteAddAvx2 : IBinomialOperator<Vector256<byte>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<byte> Calc(Vector256<byte> l, Vector256<byte> r)
-                => Avx2.Add(l, r);
+            public Vector256<byte> Calc(Vector256<byte> left, Vector256<byte> right)
+                => Avx2.Add(left, right);
 
             public bool IsSupported
             {
@@ -467,8 +584,8 @@ namespace BlueDove.VectorMath
         private struct ByteSubtract : IBinomialOperator<byte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public byte Calc(byte l, byte r)
-                => (byte)((uint)l - (uint)r);
+            public byte Calc(byte left, byte right)
+                => (byte)((uint)left - (uint)right);
 
             public bool IsSupported
             {
@@ -477,11 +594,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct ByteSubtractSse2 : IBinomialOperator<Vector128<byte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<byte> Calc(Vector128<byte> left, Vector128<byte> right)
+                => Sse2.Subtract(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct ByteSubtractAvx2 : IBinomialOperator<Vector256<byte>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<byte> Calc(Vector256<byte> l, Vector256<byte> r)
-                => Avx2.Subtract(l, r);
+            public Vector256<byte> Calc(Vector256<byte> left, Vector256<byte> right)
+                => Avx2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -493,8 +623,8 @@ namespace BlueDove.VectorMath
         private struct ByteMultiply : IBinomialOperator<byte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public byte Calc(byte l, byte r)
-                => (byte)((uint)l * (uint)r);
+            public byte Calc(byte left, byte right)
+                => (byte)((uint)left * (uint)right);
 
             public bool IsSupported
             {
@@ -506,8 +636,8 @@ namespace BlueDove.VectorMath
         private struct ByteDivide : IBinomialOperator<byte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public byte Calc(byte l, byte r)
-                => (byte)((uint)l / (uint)r);
+            public byte Calc(byte left, byte right)
+                => (byte)((uint)left / (uint)right);
 
             public bool IsSupported
             {
@@ -516,24 +646,128 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct ByteRem : IBinomialOperator<byte>
+        private struct ByteAnd : IBinomialOperator<byte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public byte Calc(byte l, byte r)
-                => (byte)((uint)l % (uint)r);
+            public byte Calc(byte left, byte right)
+                => (byte)(left & right);
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => true;
+            }
+        }
+
+        private struct ByteAndSse2 : IBinomialOperator<Vector128<byte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<byte> Calc(Vector128<byte> left, Vector128<byte> right)
+                => Sse2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ByteAndAvx2 : IBinomialOperator<Vector256<byte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<byte> Calc(Vector256<byte> left, Vector256<byte> right)
+                => Avx2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct ByteOr : IBinomialOperator<byte>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public byte Calc(byte left, byte right)
+                => (byte)(left & right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ByteOrSse2 : IBinomialOperator<Vector128<byte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<byte> Calc(Vector128<byte> left, Vector128<byte> right)
+                => Sse2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ByteOrAvx2 : IBinomialOperator<Vector256<byte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<byte> Calc(Vector256<byte> left, Vector256<byte> right)
+                => Avx2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct ByteXor : IBinomialOperator<byte>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public byte Calc(byte left, byte right)
+                => (byte)(left & right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ByteXorSse2 : IBinomialOperator<Vector128<byte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<byte> Calc(Vector128<byte> left, Vector128<byte> right)
+                => Sse2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ByteXorAvx2 : IBinomialOperator<Vector256<byte>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<byte> Calc(Vector256<byte> left, Vector256<byte> right)
+                => Avx2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
             }
         }
 
         private struct ShortAdd : IBinomialOperator<short>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public short Calc(short l, short r)
-                => (short)((int)l + (int)r);
+            public short Calc(short left, short right)
+                => (short)((int)left + (int)right);
 
             public bool IsSupported
             {
@@ -542,11 +776,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct ShortAddSse2 : IBinomialOperator<Vector128<short>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<short> Calc(Vector128<short> left, Vector128<short> right)
+                => Sse2.Add(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct ShortAddAvx2 : IBinomialOperator<Vector256<short>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<short> Calc(Vector256<short> l, Vector256<short> r)
-                => Avx2.Add(l, r);
+            public Vector256<short> Calc(Vector256<short> left, Vector256<short> right)
+                => Avx2.Add(left, right);
 
             public bool IsSupported
             {
@@ -558,8 +805,8 @@ namespace BlueDove.VectorMath
         private struct ShortSubtract : IBinomialOperator<short>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public short Calc(short l, short r)
-                => (short)((int)l - (int)r);
+            public short Calc(short left, short right)
+                => (short)((int)left - (int)right);
 
             public bool IsSupported
             {
@@ -568,11 +815,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct ShortSubtractSse2 : IBinomialOperator<Vector128<short>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<short> Calc(Vector128<short> left, Vector128<short> right)
+                => Sse2.Subtract(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct ShortSubtractAvx2 : IBinomialOperator<Vector256<short>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<short> Calc(Vector256<short> l, Vector256<short> r)
-                => Avx2.Subtract(l, r);
+            public Vector256<short> Calc(Vector256<short> left, Vector256<short> right)
+                => Avx2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -584,8 +844,8 @@ namespace BlueDove.VectorMath
         private struct ShortMultiply : IBinomialOperator<short>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public short Calc(short l, short r)
-                => (short)((int)l * (int)r);
+            public short Calc(short left, short right)
+                => (short)((int)left * (int)right);
 
             public bool IsSupported
             {
@@ -597,8 +857,8 @@ namespace BlueDove.VectorMath
         private struct ShortDivide : IBinomialOperator<short>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public short Calc(short l, short r)
-                => (short)((int)l / (int)r);
+            public short Calc(short left, short right)
+                => (short)((int)left / (int)right);
 
             public bool IsSupported
             {
@@ -607,24 +867,128 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct ShortRem : IBinomialOperator<short>
+        private struct ShortAnd : IBinomialOperator<short>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public short Calc(short l, short r)
-                => (short)((int)l % (int)r);
+            public short Calc(short left, short right)
+                => (short)(left & right);
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => true;
+            }
+        }
+
+        private struct ShortAndSse2 : IBinomialOperator<Vector128<short>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<short> Calc(Vector128<short> left, Vector128<short> right)
+                => Sse2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ShortAndAvx2 : IBinomialOperator<Vector256<short>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<short> Calc(Vector256<short> left, Vector256<short> right)
+                => Avx2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct ShortOr : IBinomialOperator<short>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public short Calc(short left, short right)
+                => (short)(left & right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ShortOrSse2 : IBinomialOperator<Vector128<short>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<short> Calc(Vector128<short> left, Vector128<short> right)
+                => Sse2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ShortOrAvx2 : IBinomialOperator<Vector256<short>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<short> Calc(Vector256<short> left, Vector256<short> right)
+                => Avx2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct ShortXor : IBinomialOperator<short>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public short Calc(short left, short right)
+                => (short)(left & right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ShortXorSse2 : IBinomialOperator<Vector128<short>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<short> Calc(Vector128<short> left, Vector128<short> right)
+                => Sse2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ShortXorAvx2 : IBinomialOperator<Vector256<short>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<short> Calc(Vector256<short> left, Vector256<short> right)
+                => Avx2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
             }
         }
 
         private struct UShortAdd : IBinomialOperator<ushort>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ushort Calc(ushort l, ushort r)
-                => (ushort)((uint)l + (uint)r);
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)((uint)left + (uint)right);
 
             public bool IsSupported
             {
@@ -633,11 +997,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct UShortAddSse2 : IBinomialOperator<Vector128<ushort>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ushort> Calc(Vector128<ushort> left, Vector128<ushort> right)
+                => Sse2.Add(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct UShortAddAvx2 : IBinomialOperator<Vector256<ushort>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<ushort> Calc(Vector256<ushort> l, Vector256<ushort> r)
-                => Avx2.Add(l, r);
+            public Vector256<ushort> Calc(Vector256<ushort> left, Vector256<ushort> right)
+                => Avx2.Add(left, right);
 
             public bool IsSupported
             {
@@ -649,8 +1026,8 @@ namespace BlueDove.VectorMath
         private struct UShortSubtract : IBinomialOperator<ushort>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ushort Calc(ushort l, ushort r)
-                => (ushort)((uint)l - (uint)r);
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)((uint)left - (uint)right);
 
             public bool IsSupported
             {
@@ -659,11 +1036,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct UShortSubtractSse2 : IBinomialOperator<Vector128<ushort>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ushort> Calc(Vector128<ushort> left, Vector128<ushort> right)
+                => Sse2.Subtract(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct UShortSubtractAvx2 : IBinomialOperator<Vector256<ushort>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<ushort> Calc(Vector256<ushort> l, Vector256<ushort> r)
-                => Avx2.Subtract(l, r);
+            public Vector256<ushort> Calc(Vector256<ushort> left, Vector256<ushort> right)
+                => Avx2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -675,8 +1065,8 @@ namespace BlueDove.VectorMath
         private struct UShortMultiply : IBinomialOperator<ushort>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ushort Calc(ushort l, ushort r)
-                => (ushort)((uint)l * (uint)r);
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)((uint)left * (uint)right);
 
             public bool IsSupported
             {
@@ -688,8 +1078,8 @@ namespace BlueDove.VectorMath
         private struct UShortDivide : IBinomialOperator<ushort>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ushort Calc(ushort l, ushort r)
-                => (ushort)((uint)l / (uint)r);
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)((uint)left / (uint)right);
 
             public bool IsSupported
             {
@@ -698,24 +1088,128 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct UShortRem : IBinomialOperator<ushort>
+        private struct UShortAnd : IBinomialOperator<ushort>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ushort Calc(ushort l, ushort r)
-                => (ushort)((uint)l % (uint)r);
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)(left & right);
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => true;
+            }
+        }
+
+        private struct UShortAndSse2 : IBinomialOperator<Vector128<ushort>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ushort> Calc(Vector128<ushort> left, Vector128<ushort> right)
+                => Sse2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct UShortAndAvx2 : IBinomialOperator<Vector256<ushort>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<ushort> Calc(Vector256<ushort> left, Vector256<ushort> right)
+                => Avx2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct UShortOr : IBinomialOperator<ushort>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)(left & right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct UShortOrSse2 : IBinomialOperator<Vector128<ushort>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ushort> Calc(Vector128<ushort> left, Vector128<ushort> right)
+                => Sse2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct UShortOrAvx2 : IBinomialOperator<Vector256<ushort>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<ushort> Calc(Vector256<ushort> left, Vector256<ushort> right)
+                => Avx2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct UShortXor : IBinomialOperator<ushort>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)(left & right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct UShortXorSse2 : IBinomialOperator<Vector128<ushort>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ushort> Calc(Vector128<ushort> left, Vector128<ushort> right)
+                => Sse2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct UShortXorAvx2 : IBinomialOperator<Vector256<ushort>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<ushort> Calc(Vector256<ushort> left, Vector256<ushort> right)
+                => Avx2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
             }
         }
 
         private struct IntAdd : IBinomialOperator<int>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public int Calc(int l, int r)
-                => l + r;
+            public int Calc(int left, int right)
+                => left + right;
 
             public bool IsSupported
             {
@@ -724,11 +1218,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct IntAddSse2 : IBinomialOperator<Vector128<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<int> Calc(Vector128<int> left, Vector128<int> right)
+                => Sse2.Add(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct IntAddAvx2 : IBinomialOperator<Vector256<int>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<int> Calc(Vector256<int> l, Vector256<int> r)
-                => Avx2.Add(l, r);
+            public Vector256<int> Calc(Vector256<int> left, Vector256<int> right)
+                => Avx2.Add(left, right);
 
             public bool IsSupported
             {
@@ -740,8 +1247,8 @@ namespace BlueDove.VectorMath
         private struct IntSubtract : IBinomialOperator<int>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public int Calc(int l, int r)
-                => l - r;
+            public int Calc(int left, int right)
+                => left - right;
 
             public bool IsSupported
             {
@@ -750,11 +1257,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct IntSubtractSse2 : IBinomialOperator<Vector128<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<int> Calc(Vector128<int> left, Vector128<int> right)
+                => Sse2.Subtract(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct IntSubtractAvx2 : IBinomialOperator<Vector256<int>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<int> Calc(Vector256<int> l, Vector256<int> r)
-                => Avx2.Subtract(l, r);
+            public Vector256<int> Calc(Vector256<int> left, Vector256<int> right)
+                => Avx2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -766,8 +1286,8 @@ namespace BlueDove.VectorMath
         private struct IntMultiply : IBinomialOperator<int>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public int Calc(int l, int r)
-                => l * r;
+            public int Calc(int left, int right)
+                => left * right;
 
             public bool IsSupported
             {
@@ -779,8 +1299,8 @@ namespace BlueDove.VectorMath
         private struct IntDivide : IBinomialOperator<int>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public int Calc(int l, int r)
-                => l / r;
+            public int Calc(int left, int right)
+                => left / right;
 
             public bool IsSupported
             {
@@ -789,24 +1309,167 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct IntRem : IBinomialOperator<int>
+        private struct IntAnd : IBinomialOperator<int>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public int Calc(int l, int r)
-                => l % r;
+            public int Calc(int left, int right)
+                => left & right;
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => true;
+            }
+        }
+
+        private struct IntAndSse2 : IBinomialOperator<Vector128<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<int> Calc(Vector128<int> left, Vector128<int> right)
+                => Sse2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct IntAndAvx2 : IBinomialOperator<Vector256<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<int> Calc(Vector256<int> left, Vector256<int> right)
+                => Avx2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct IntOr : IBinomialOperator<int>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public int Calc(int left, int right)
+                => left | right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct IntOrSse2 : IBinomialOperator<Vector128<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<int> Calc(Vector128<int> left, Vector128<int> right)
+                => Sse2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct IntOrAvx2 : IBinomialOperator<Vector256<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<int> Calc(Vector256<int> left, Vector256<int> right)
+                => Avx2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct IntXor : IBinomialOperator<int>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public int Calc(int left, int right)
+                => left ^ right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct IntXorSse2 : IBinomialOperator<Vector128<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<int> Calc(Vector128<int> left, Vector128<int> right)
+                => Sse2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct IntXorAvx2 : IBinomialOperator<Vector256<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<int> Calc(Vector256<int> left, Vector256<int> right)
+                => Avx2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct IntAndNot : IBinomialOperator<int>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public int Calc(int left, int right)
+                => left & ~right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct IntAndNotSse2 : IBinomialOperator<Vector128<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<int> Calc(Vector128<int> left, Vector128<int> right)
+                => Sse2.AndNot(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct IntAndNotAvx2 : IBinomialOperator<Vector256<int>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<int> Calc(Vector256<int> left, Vector256<int> right)
+                => Avx2.AndNot(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
             }
         }
 
         private struct UIntAdd : IBinomialOperator<uint>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public uint Calc(uint l, uint r)
-                => l + r;
+            public uint Calc(uint left, uint right)
+                => left + right;
 
             public bool IsSupported
             {
@@ -815,11 +1478,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct UIntAddSse2 : IBinomialOperator<Vector128<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<uint> Calc(Vector128<uint> left, Vector128<uint> right)
+                => Sse2.Add(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct UIntAddAvx2 : IBinomialOperator<Vector256<uint>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<uint> Calc(Vector256<uint> l, Vector256<uint> r)
-                => Avx2.Add(l, r);
+            public Vector256<uint> Calc(Vector256<uint> left, Vector256<uint> right)
+                => Avx2.Add(left, right);
 
             public bool IsSupported
             {
@@ -831,8 +1507,8 @@ namespace BlueDove.VectorMath
         private struct UIntSubtract : IBinomialOperator<uint>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public uint Calc(uint l, uint r)
-                => l - r;
+            public uint Calc(uint left, uint right)
+                => left - right;
 
             public bool IsSupported
             {
@@ -841,11 +1517,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct UIntSubtractSse2 : IBinomialOperator<Vector128<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<uint> Calc(Vector128<uint> left, Vector128<uint> right)
+                => Sse2.Subtract(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct UIntSubtractAvx2 : IBinomialOperator<Vector256<uint>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<uint> Calc(Vector256<uint> l, Vector256<uint> r)
-                => Avx2.Subtract(l, r);
+            public Vector256<uint> Calc(Vector256<uint> left, Vector256<uint> right)
+                => Avx2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -857,8 +1546,8 @@ namespace BlueDove.VectorMath
         private struct UIntMultiply : IBinomialOperator<uint>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public uint Calc(uint l, uint r)
-                => l * r;
+            public uint Calc(uint left, uint right)
+                => left * right;
 
             public bool IsSupported
             {
@@ -870,8 +1559,8 @@ namespace BlueDove.VectorMath
         private struct UIntDivide : IBinomialOperator<uint>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public uint Calc(uint l, uint r)
-                => l / r;
+            public uint Calc(uint left, uint right)
+                => left / right;
 
             public bool IsSupported
             {
@@ -880,24 +1569,167 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct UIntRem : IBinomialOperator<uint>
+        private struct UIntAnd : IBinomialOperator<uint>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public uint Calc(uint l, uint r)
-                => l % r;
+            public uint Calc(uint left, uint right)
+                => left & right;
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => true;
+            }
+        }
+
+        private struct UIntAndSse2 : IBinomialOperator<Vector128<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<uint> Calc(Vector128<uint> left, Vector128<uint> right)
+                => Sse2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct UIntAndAvx2 : IBinomialOperator<Vector256<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<uint> Calc(Vector256<uint> left, Vector256<uint> right)
+                => Avx2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct UIntOr : IBinomialOperator<uint>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public uint Calc(uint left, uint right)
+                => left | right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct UIntOrSse2 : IBinomialOperator<Vector128<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<uint> Calc(Vector128<uint> left, Vector128<uint> right)
+                => Sse2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct UIntOrAvx2 : IBinomialOperator<Vector256<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<uint> Calc(Vector256<uint> left, Vector256<uint> right)
+                => Avx2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct UIntXor : IBinomialOperator<uint>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public uint Calc(uint left, uint right)
+                => left ^ right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct UIntXorSse2 : IBinomialOperator<Vector128<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<uint> Calc(Vector128<uint> left, Vector128<uint> right)
+                => Sse2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct UIntXorAvx2 : IBinomialOperator<Vector256<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<uint> Calc(Vector256<uint> left, Vector256<uint> right)
+                => Avx2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct UIntAndNot : IBinomialOperator<uint>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public uint Calc(uint left, uint right)
+                => left & ~right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct UIntAndNotSse2 : IBinomialOperator<Vector128<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<uint> Calc(Vector128<uint> left, Vector128<uint> right)
+                => Sse2.AndNot(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct UIntAndNotAvx2 : IBinomialOperator<Vector256<uint>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<uint> Calc(Vector256<uint> left, Vector256<uint> right)
+                => Avx2.AndNot(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
             }
         }
 
         private struct LongAdd : IBinomialOperator<long>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public long Calc(long l, long r)
-                => l + r;
+            public long Calc(long left, long right)
+                => left + right;
 
             public bool IsSupported
             {
@@ -906,11 +1738,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct LongAddSse2 : IBinomialOperator<Vector128<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<long> Calc(Vector128<long> left, Vector128<long> right)
+                => Sse2.Add(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct LongAddAvx2 : IBinomialOperator<Vector256<long>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<long> Calc(Vector256<long> l, Vector256<long> r)
-                => Avx2.Add(l, r);
+            public Vector256<long> Calc(Vector256<long> left, Vector256<long> right)
+                => Avx2.Add(left, right);
 
             public bool IsSupported
             {
@@ -922,8 +1767,8 @@ namespace BlueDove.VectorMath
         private struct LongSubtract : IBinomialOperator<long>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public long Calc(long l, long r)
-                => l - r;
+            public long Calc(long left, long right)
+                => left - right;
 
             public bool IsSupported
             {
@@ -932,11 +1777,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct LongSubtractSse2 : IBinomialOperator<Vector128<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<long> Calc(Vector128<long> left, Vector128<long> right)
+                => Sse2.Subtract(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct LongSubtractAvx2 : IBinomialOperator<Vector256<long>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<long> Calc(Vector256<long> l, Vector256<long> r)
-                => Avx2.Subtract(l, r);
+            public Vector256<long> Calc(Vector256<long> left, Vector256<long> right)
+                => Avx2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -948,8 +1806,8 @@ namespace BlueDove.VectorMath
         private struct LongMultiply : IBinomialOperator<long>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public long Calc(long l, long r)
-                => l * r;
+            public long Calc(long left, long right)
+                => left * right;
 
             public bool IsSupported
             {
@@ -961,8 +1819,8 @@ namespace BlueDove.VectorMath
         private struct LongDivide : IBinomialOperator<long>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public long Calc(long l, long r)
-                => l / r;
+            public long Calc(long left, long right)
+                => left / right;
 
             public bool IsSupported
             {
@@ -971,24 +1829,167 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct LongRem : IBinomialOperator<long>
+        private struct LongAnd : IBinomialOperator<long>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public long Calc(long l, long r)
-                => l % r;
+            public long Calc(long left, long right)
+                => left & right;
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => true;
+            }
+        }
+
+        private struct LongAndSse2 : IBinomialOperator<Vector128<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<long> Calc(Vector128<long> left, Vector128<long> right)
+                => Sse2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct LongAndAvx2 : IBinomialOperator<Vector256<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<long> Calc(Vector256<long> left, Vector256<long> right)
+                => Avx2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct LongOr : IBinomialOperator<long>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public long Calc(long left, long right)
+                => left | right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct LongOrSse2 : IBinomialOperator<Vector128<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<long> Calc(Vector128<long> left, Vector128<long> right)
+                => Sse2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct LongOrAvx2 : IBinomialOperator<Vector256<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<long> Calc(Vector256<long> left, Vector256<long> right)
+                => Avx2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct LongXor : IBinomialOperator<long>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public long Calc(long left, long right)
+                => left ^ right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct LongXorSse2 : IBinomialOperator<Vector128<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<long> Calc(Vector128<long> left, Vector128<long> right)
+                => Sse2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct LongXorAvx2 : IBinomialOperator<Vector256<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<long> Calc(Vector256<long> left, Vector256<long> right)
+                => Avx2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct LongAndNot : IBinomialOperator<long>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public long Calc(long left, long right)
+                => left & ~right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct LongAndNotSse2 : IBinomialOperator<Vector128<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<long> Calc(Vector128<long> left, Vector128<long> right)
+                => Sse2.AndNot(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct LongAndNotAvx2 : IBinomialOperator<Vector256<long>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<long> Calc(Vector256<long> left, Vector256<long> right)
+                => Avx2.AndNot(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
             }
         }
 
         private struct ULongAdd : IBinomialOperator<ulong>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ulong Calc(ulong l, ulong r)
-                => l + r;
+            public ulong Calc(ulong left, ulong right)
+                => left + right;
 
             public bool IsSupported
             {
@@ -997,11 +1998,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct ULongAddSse2 : IBinomialOperator<Vector128<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ulong> Calc(Vector128<ulong> left, Vector128<ulong> right)
+                => Sse2.Add(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct ULongAddAvx2 : IBinomialOperator<Vector256<ulong>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<ulong> Calc(Vector256<ulong> l, Vector256<ulong> r)
-                => Avx2.Add(l, r);
+            public Vector256<ulong> Calc(Vector256<ulong> left, Vector256<ulong> right)
+                => Avx2.Add(left, right);
 
             public bool IsSupported
             {
@@ -1013,8 +2027,8 @@ namespace BlueDove.VectorMath
         private struct ULongSubtract : IBinomialOperator<ulong>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ulong Calc(ulong l, ulong r)
-                => l - r;
+            public ulong Calc(ulong left, ulong right)
+                => left - right;
 
             public bool IsSupported
             {
@@ -1023,11 +2037,24 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct ULongSubtractSse2 : IBinomialOperator<Vector128<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ulong> Calc(Vector128<ulong> left, Vector128<ulong> right)
+                => Sse2.Subtract(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
         private struct ULongSubtractAvx2 : IBinomialOperator<Vector256<ulong>>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public Vector256<ulong> Calc(Vector256<ulong> l, Vector256<ulong> r)
-                => Avx2.Subtract(l, r);
+            public Vector256<ulong> Calc(Vector256<ulong> left, Vector256<ulong> right)
+                => Avx2.Subtract(left, right);
 
             public bool IsSupported
             {
@@ -1039,8 +2066,8 @@ namespace BlueDove.VectorMath
         private struct ULongMultiply : IBinomialOperator<ulong>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ulong Calc(ulong l, ulong r)
-                => l * r;
+            public ulong Calc(ulong left, ulong right)
+                => left * right;
 
             public bool IsSupported
             {
@@ -1052,8 +2079,8 @@ namespace BlueDove.VectorMath
         private struct ULongDivide : IBinomialOperator<ulong>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ulong Calc(ulong l, ulong r)
-                => l / r;
+            public ulong Calc(ulong left, ulong right)
+                => left / right;
 
             public bool IsSupported
             {
@@ -1062,16 +2089,159 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct ULongRem : IBinomialOperator<ulong>
+        private struct ULongAnd : IBinomialOperator<ulong>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ulong Calc(ulong l, ulong r)
-                => l % r;
+            public ulong Calc(ulong left, ulong right)
+                => left & right;
 
             public bool IsSupported
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => true;
+            }
+        }
+
+        private struct ULongAndSse2 : IBinomialOperator<Vector128<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ulong> Calc(Vector128<ulong> left, Vector128<ulong> right)
+                => Sse2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ULongAndAvx2 : IBinomialOperator<Vector256<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<ulong> Calc(Vector256<ulong> left, Vector256<ulong> right)
+                => Avx2.And(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct ULongOr : IBinomialOperator<ulong>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ulong Calc(ulong left, ulong right)
+                => left | right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ULongOrSse2 : IBinomialOperator<Vector128<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ulong> Calc(Vector128<ulong> left, Vector128<ulong> right)
+                => Sse2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ULongOrAvx2 : IBinomialOperator<Vector256<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<ulong> Calc(Vector256<ulong> left, Vector256<ulong> right)
+                => Avx2.Or(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct ULongXor : IBinomialOperator<ulong>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ulong Calc(ulong left, ulong right)
+                => left ^ right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ULongXorSse2 : IBinomialOperator<Vector128<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ulong> Calc(Vector128<ulong> left, Vector128<ulong> right)
+                => Sse2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ULongXorAvx2 : IBinomialOperator<Vector256<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<ulong> Calc(Vector256<ulong> left, Vector256<ulong> right)
+                => Avx2.Xor(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
+            }
+        }
+
+        private struct ULongAndNot : IBinomialOperator<ulong>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ulong Calc(ulong left, ulong right)
+                => left & ~right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ULongAndNotSse2 : IBinomialOperator<Vector128<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector128<ulong> Calc(Vector128<ulong> left, Vector128<ulong> right)
+                => Sse2.AndNot(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Sse2.IsSupported;
+            }
+        }
+
+        private struct ULongAndNotAvx2 : IBinomialOperator<Vector256<ulong>>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Vector256<ulong> Calc(Vector256<ulong> left, Vector256<ulong> right)
+                => Avx2.AndNot(left, right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => Avx2.IsSupported;
             }
         }
     }

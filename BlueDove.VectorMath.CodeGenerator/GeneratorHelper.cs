@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 
 namespace BlueDove.VectorMath.CodeGenerator
 {
@@ -11,9 +9,8 @@ namespace BlueDove.VectorMath.CodeGenerator
         static int Main(string[] args)
         {
             var dir = Directory.GetCurrentDirectory();
-            Console.WriteLine(dir);
-            var target = dir.Replace(".CodeGenerator\\bin\\Release\\netcoreapp3.0", 
-                String.Empty);
+            //Console.WriteLine(dir);
+            var target = dir.Replace(".CodeGenerator\\bin\\Release\\netcoreapp3.0", string.Empty);
             Console.WriteLine(target);
 
             Generate(target);
@@ -24,13 +21,13 @@ namespace BlueDove.VectorMath.CodeGenerator
         {
             using var biWriter = new StreamWriter(directory + "\\VectorOperations.BinomialOperators.g.cs");
             biWriter.WriteLine(GeneratorHelper.Header);
-            using var opWriter = new StreamWriter(directory + "\\VectorOperations.g.cs"); 
+            using var opWriter = new StreamWriter(directory + "\\VectorOperations.g.cs");
             opWriter.WriteLine(GeneratorHelper.Header);
             Span<int> size = stackalloc int[3] {0, 128, 256};
             var ops = new string[3];
             foreach (ArithmeticTypes aType in Enum.GetValues(typeof(ArithmeticTypes)))
             {
-                foreach (OperationType oType in Enum.GetValues(typeof(OperationType)))
+                foreach (BinomialOperationType oType in Enum.GetValues(typeof(BinomialOperationType)))
                 {
                     ops.AsSpan().Fill(string.Empty);
                     foreach (var i in size)
@@ -42,6 +39,7 @@ namespace BlueDove.VectorMath.CodeGenerator
                             if (i == 0) goto NoOp;
                             continue;
                         }
+
                         biWriter.WriteLine(binomialOperator);
                         ops[i / 128] = typeName;
                     }
@@ -56,29 +54,31 @@ namespace BlueDove.VectorMath.CodeGenerator
                     }
 
                     if (n > 1) continue;
-                    
+
                     opWriter.WriteLine(GeneratorHelper.CreateOperator(oType, aType, ops));
-                    
+
                     NoOp: ;
                 }
             }
+
             biWriter.WriteLine(GeneratorHelper.Footer);
             opWriter.WriteLine(GeneratorHelper.Footer);
         }
     }
-    
-    public enum OperationType
+
+    public enum BinomialOperationType
     {
         Nop,
-        RW,
         Add,
         Subtract,
         Multiply,
         Divide,
-        Rem,
-        Sqrt,
-        Abs,
+        And,
+        Or,
+        Xor,
+        AndNot,
     }
+
     public enum ArithmeticTypes
     {
         Float = 0,
@@ -92,6 +92,7 @@ namespace BlueDove.VectorMath.CodeGenerator
         Long,
         ULong,
     }
+
     public enum IntrinsicsTypes
     {
         None,
@@ -105,30 +106,46 @@ namespace BlueDove.VectorMath.CodeGenerator
         Avx,
         Avx2
     }
-    
+
     public static class GeneratorHelper
     {
-        private static string OpStr(OperationType type, ArithmeticTypes art)
+        private static string OpStr(BinomialOperationType type, ArithmeticTypes art)
         {
             switch (art)
             {
                 case ArithmeticTypes.Float:
+                    return type switch
+                    {
+                        BinomialOperationType.Add => "{0} + {1}",
+                        BinomialOperationType.Subtract => "{0} - {1}",
+                        BinomialOperationType.Multiply => "{0} * {1}",
+                        BinomialOperationType.Divide => "{0} / {1}",
+                        _ => string.Empty
+                    };
                 case ArithmeticTypes.Double:
+                    return type switch
+                    {
+                        BinomialOperationType.Add => "{0} + {1}",
+                        BinomialOperationType.Subtract => "{0} - {1}",
+                        BinomialOperationType.Multiply => "{0} * {1}",
+                        BinomialOperationType.Divide => "{0} / {1}",
+                        
+                        _ => string.Empty
+                    };
                 case ArithmeticTypes.Int:
                 case ArithmeticTypes.UInt:
                 case ArithmeticTypes.Long:
                 case ArithmeticTypes.ULong:
                     return type switch
                     {
-                        OperationType.Nop => string.Empty,
-                        OperationType.RW => string.Empty,
-                        OperationType.Add => "{0} + {1}",
-                        OperationType.Subtract => "{0} - {1}",
-                        OperationType.Multiply => "{0} * {1}",
-                        OperationType.Divide => "{0} / {1}",
-                        OperationType.Rem => "{0} % {1}",
-                        OperationType.Sqrt => string.Empty,
-                        OperationType.Abs => string.Empty,
+                        BinomialOperationType.Add => "{0} + {1}",
+                        BinomialOperationType.Subtract => "{0} - {1}",
+                        BinomialOperationType.Multiply => "{0} * {1}",
+                        BinomialOperationType.Divide => "{0} / {1}",
+                        BinomialOperationType.And => "{0} & {1}",
+                        BinomialOperationType.AndNot => "{0} & ~{1}",
+                        BinomialOperationType.Or => "{0} | {1}",
+                        BinomialOperationType.Xor => "{0} ^ {1}",
                         _ => string.Empty
                     };
 
@@ -136,139 +153,129 @@ namespace BlueDove.VectorMath.CodeGenerator
                 case ArithmeticTypes.Short:
                     return type switch
                     {
-                        OperationType.Nop => string.Empty,
-                        OperationType.RW => string.Empty,
-                        OperationType.Add => $"({ArithmeticTypeStrings[(int)art]})((int){{0}} + (int){{1}})",
-                        OperationType.Subtract => $"({ArithmeticTypeStrings[(int)art]})((int){{0}} - (int){{1}})",
-                        OperationType.Multiply => $"({ArithmeticTypeStrings[(int)art]})((int){{0}} * (int){{1}})",
-                        OperationType.Divide => $"({ArithmeticTypeStrings[(int)art]})((int){{0}} / (int){{1}})",
-                        OperationType.Rem => $"({ArithmeticTypeStrings[(int)art]})((int){{0}} % (int){{1}})",
-                        OperationType.Sqrt => string.Empty,
-                        OperationType.Abs => string.Empty,
+                        BinomialOperationType.Add => $"({ArithmeticTypeStrings[(int) art]})((int){{0}} + (int){{1}})",
+                        BinomialOperationType.Subtract => $"({ArithmeticTypeStrings[(int) art]})((int){{0}} - (int){{1}})",
+                        BinomialOperationType.Multiply => $"({ArithmeticTypeStrings[(int) art]})((int){{0}} * (int){{1}})",
+                        BinomialOperationType.Divide => $"({ArithmeticTypeStrings[(int) art]})((int){{0}} / (int){{1}})",
+                        BinomialOperationType.And => $"({ArithmeticTypeStrings[(int) art]})({{0}} & {{1}})",
+                        BinomialOperationType.Or => $"({ArithmeticTypeStrings[(int) art]})({{0}} & {{1}})",
+                        BinomialOperationType.Xor => $"({ArithmeticTypeStrings[(int) art]})({{0}} & {{1}})",
                         _ => string.Empty
                     };
-                    
+
                 case ArithmeticTypes.Byte:
                 case ArithmeticTypes.UShort:
                     return type switch
                     {
-                        OperationType.Nop => string.Empty,
-                        OperationType.RW => string.Empty,
-                        OperationType.Add => $"({ArithmeticTypeStrings[(int)art]})((uint){{0}} + (uint){{1}})",
-                        OperationType.Subtract => $"({ArithmeticTypeStrings[(int)art]})((uint){{0}} - (uint){{1}})",
-                        OperationType.Multiply => $"({ArithmeticTypeStrings[(int)art]})((uint){{0}} * (uint){{1}})",
-                        OperationType.Divide => $"({ArithmeticTypeStrings[(int)art]})((uint){{0}} / (uint){{1}})",
-                        OperationType.Rem => $"({ArithmeticTypeStrings[(int)art]})((uint){{0}} % (uint){{1}})",
-                        OperationType.Sqrt => string.Empty,
-                        OperationType.Abs => string.Empty,
+                        BinomialOperationType.Add => $"({ArithmeticTypeStrings[(int) art]})((uint){{0}} + (uint){{1}})",
+                        BinomialOperationType.Subtract => $"({ArithmeticTypeStrings[(int) art]})((uint){{0}} - (uint){{1}})",
+                        BinomialOperationType.Multiply => $"({ArithmeticTypeStrings[(int) art]})((uint){{0}} * (uint){{1}})",
+                        BinomialOperationType.Divide => $"({ArithmeticTypeStrings[(int) art]})((uint){{0}} / (uint){{1}})",
+                        BinomialOperationType.And => $"({ArithmeticTypeStrings[(int) art]})({{0}} & {{1}})",
+                        BinomialOperationType.Or => $"({ArithmeticTypeStrings[(int) art]})({{0}} & {{1}})",
+                        BinomialOperationType.Xor => $"({ArithmeticTypeStrings[(int) art]})({{0}} & {{1}})",
                         _ => string.Empty
                     };
-                
+
                 default:
                     return string.Empty;
             }
         }
-        
-        private static readonly string[] ArithmeticTypeStrings = 
+
+        private static readonly string[] ArithmeticTypeStrings =
             {"float", "double", "sbyte", "byte", "short", "ushort", "int", "uint", "long", "ulong"};
-        
-        private static IntrinsicsTypes GetIntrinsicsTypes(OperationType op, ArithmeticTypes art, int size)
+
+        private static IntrinsicsTypes GetIntrinsicsTypes(BinomialOperationType op, ArithmeticTypes art, int size)
         {
             switch (size)
             {
                 case 256:
-                    switch (art)
+                    switch (op)
                     {
-                        case ArithmeticTypes.Double:
-                        case ArithmeticTypes.Float:
-                            switch (op)
+                        case BinomialOperationType.Add:
+                        case BinomialOperationType.Subtract:
+                        case BinomialOperationType.And:
+                        case BinomialOperationType.AndNot:
+                        case BinomialOperationType.Or:
+                        case BinomialOperationType.Xor:
+                            switch (art)
                             {
-                                case OperationType.RW:
-                                case OperationType.Add:
-                                case OperationType.Subtract:
-                                case OperationType.Multiply:
-                                case OperationType.Divide:
+                                case ArithmeticTypes.Float:
+                                case ArithmeticTypes.Double:
+                                    return IntrinsicsTypes.Avx;
+                                case ArithmeticTypes.SByte:
+                                case ArithmeticTypes.Byte:
+                                case ArithmeticTypes.Short:
+                                case ArithmeticTypes.UShort:
+                                case ArithmeticTypes.Int:
+                                case ArithmeticTypes.UInt:
+                                case ArithmeticTypes.Long:
+                                case ArithmeticTypes.ULong:
+                                    return IntrinsicsTypes.Avx2;
+                                default:
+                                    return IntrinsicsTypes.None;
+                            }
+
+                        case BinomialOperationType.Multiply:
+                        case BinomialOperationType.Divide:
+                            switch (art)
+                            {
+                                case ArithmeticTypes.Float:
+                                case ArithmeticTypes.Double:
                                     return IntrinsicsTypes.Avx;
                                 default:
                                     return IntrinsicsTypes.None;
                             }
-                        case ArithmeticTypes.SByte:
-                        case ArithmeticTypes.Byte:
-                        case ArithmeticTypes.Short:
-                        case ArithmeticTypes.UShort:
-                            switch (op)
-                            {
-                                case OperationType.RW:
-                                case OperationType.Add:
-                                case OperationType.Subtract:
-                                    return IntrinsicsTypes.Avx2;
-                                default:
-                                    return IntrinsicsTypes.None;
-                            }
-                        case ArithmeticTypes.Int:
-                        case ArithmeticTypes.UInt:
-                            switch (op)
-                            {
-                                case OperationType.RW:
-                                case OperationType.Add:
-                                case OperationType.Subtract:
-                                    return IntrinsicsTypes.Avx2;
-                                default:
-                                    return IntrinsicsTypes.None;
-                            }
-                        case ArithmeticTypes.Long:
-                        case ArithmeticTypes.ULong:
-                            switch (op)
-                            {
-                                case OperationType.RW:
-                                case OperationType.Add:
-                                case OperationType.Subtract:
-                                    return IntrinsicsTypes.Avx2;
-                                default:
-                                    return IntrinsicsTypes.None;
-                            }
-                        default:
-                            return IntrinsicsTypes.None;
+
+                        default: return IntrinsicsTypes.None;
                     }
                 case 128:
-                    switch (art)
+                    switch (op)
                     {
-                        case ArithmeticTypes.Double:
-                            switch (op)
+                        case BinomialOperationType.Add:
+                        case BinomialOperationType.Subtract:
+                        case BinomialOperationType.And:
+                        case BinomialOperationType.AndNot:
+                        case BinomialOperationType.Or:
+                        case BinomialOperationType.Xor:
+                            switch (art)
                             {
-                                case OperationType.RW:
-                                case OperationType.Add:
-                                case OperationType.Subtract:
-                                case OperationType.Multiply:
-                                case OperationType.Divide:
+                                case ArithmeticTypes.Float:
+                                    return IntrinsicsTypes.Sse;
+                                case ArithmeticTypes.Double:
+                                case ArithmeticTypes.SByte:
+                                case ArithmeticTypes.Byte:
+                                case ArithmeticTypes.Short:
+                                case ArithmeticTypes.UShort:
+                                case ArithmeticTypes.Int:
+                                case ArithmeticTypes.UInt:
+                                case ArithmeticTypes.Long:
+                                case ArithmeticTypes.ULong:
                                     return IntrinsicsTypes.Sse2;
                                 default:
                                     return IntrinsicsTypes.None;
                             }
-                        case ArithmeticTypes.Float:
-                            switch (op)
+
+                        case BinomialOperationType.Multiply:
+                        case BinomialOperationType.Divide:
+                            switch (art)
                             {
-                                case OperationType.RW:
-                                case OperationType.Add:
-                                case OperationType.Subtract:
-                                case OperationType.Multiply:
-                                case OperationType.Divide:
+                                case ArithmeticTypes.Float:
                                     return IntrinsicsTypes.Sse;
+                                case ArithmeticTypes.Double:
+                                    return IntrinsicsTypes.Sse2;
                                 default:
                                     return IntrinsicsTypes.None;
                             }
-                            
+                        default: return IntrinsicsTypes.None;
                     }
-
-                    break;
                 case 0:
                     switch (op)
                     {
-                        case OperationType.RW:
-                        case OperationType.Add:
-                        case OperationType.Subtract:
-                        case OperationType.Multiply:
-                        case OperationType.Divide:
+                        case BinomialOperationType.Add:
+                        case BinomialOperationType.Subtract:
+                        case BinomialOperationType.Multiply:
+                        case BinomialOperationType.Divide:
                             return IntrinsicsTypes.Operator;
                         default:
                             return IntrinsicsTypes.None;
@@ -277,8 +284,6 @@ namespace BlueDove.VectorMath.CodeGenerator
                     Debug.Assert(false);
                     goto case 0;
             }
-
-            return IntrinsicsTypes.None;
         }
 
         public const string Header = @"//Caution : This is a generated file so change in this file might disapeare.
@@ -295,25 +300,25 @@ namespace BlueDove.VectorMath
         public const string Footer = @"    }
 }
 ";
-        
-        public static string CreateBinomialOperator(OperationType op, ArithmeticTypes art, int size, out string typeName)
+
+        public static string CreateBinomialOperator(BinomialOperationType op, ArithmeticTypes art, int size,
+            out string typeName)
         {
             typeName = string.Empty;
-            if(op == OperationType.RW) return string.Empty;
             if (size != 0)
             {
                 var iType = GetIntrinsicsTypes(op, art, size);
                 if (iType <= IntrinsicsTypes.None)
                     return string.Empty;
-                var typeString = ArithmeticTypeStrings[(int)art];
+                var typeString = ArithmeticTypeStrings[(int) art];
                 var vector = $"Vector{size}<{typeString}>";
                 typeName = $"{art}{op}{iType}";
                 return $@"
         private struct {typeName} : IBinomialOperator<{vector}>
         {{
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public {vector} Calc({vector} l, {vector} r)
-                => {$"{iType}.{op}(l, r)"};
+            public {vector} Calc({vector} left, {vector} right)
+                => {$"{iType}.{op}(left, right)"};
 
             public bool IsSupported
             {{
@@ -324,7 +329,7 @@ namespace BlueDove.VectorMath
             }
             else
             {
-                var typeString = ArithmeticTypeStrings[(int)art];
+                var typeString = ArithmeticTypeStrings[(int) art];
                 var opStr = OpStr(op, art);
                 if (opStr == string.Empty) return default;
                 typeName = $"{art}{op}";
@@ -332,8 +337,8 @@ namespace BlueDove.VectorMath
         private struct {typeName} : IBinomialOperator<{typeString}>
         {{
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public {typeString} Calc({typeString} l, {typeString} r)
-                => {string.Format(opStr, "l", "r")};
+            public {typeString} Calc({typeString} left, {typeString} right)
+                => {string.Format(opStr, "left", "right")};
 
             public bool IsSupported
             {{
@@ -344,14 +349,14 @@ namespace BlueDove.VectorMath
             }
         }
 
-        public static string CreateOperator(OperationType oType, ArithmeticTypes aType, string[] ops)
+        public static string CreateOperator(BinomialOperationType oType, ArithmeticTypes aType, string[] ops)
         {
             var atStr = ArithmeticTypeStrings[(int) aType];
             var op256 = (string.IsNullOrEmpty(ops[2]) ? $"NilOperator<Vector256<{atStr}>>" : ops[2]);
             var op128 = (string.IsNullOrEmpty(ops[1]) ? $"NilOperator<Vector128<{atStr}>>" : ops[1]);
             return $@"
-        public static void {oType}(ReadOnlySpan<{atStr}> l, ReadOnlySpan<{atStr}> r, Span<{atStr}> target)
-            => OperationBase<{atStr}, {op256}, {op128}, {ops[0]}>(l, r, target);";
+        public static void {oType}(ReadOnlySpan<{atStr}> left, ReadOnlySpan<{atStr}> right, Span<{atStr}> target)
+            => OperationBase<{atStr}, {op256}, {op128}, {ops[0]}>(left, right, target);";
         }
     }
 }
