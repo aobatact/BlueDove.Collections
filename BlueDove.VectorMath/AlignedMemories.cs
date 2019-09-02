@@ -1,5 +1,6 @@
 using System;
 using System.Buffers;
+using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -14,6 +15,19 @@ namespace BlueDove.VectorMath
 
         public static Memory<T> AllocAligned128<T>(int length) where T : unmanaged
             => (new AlignedMemory128<T>(length)).CreateMemory();
+
+        public static unsafe int NotAlignedLength256<T>(ref T head)
+        {
+            var p = Unsafe.AsPointer(ref head) ;
+            var pl = (int)p & (Vector256<byte>.Count - 1);
+            return pl;
+        }
+        public static unsafe int NotAlignedLength128<T>(ref T head)
+        {
+            var p = Unsafe.AsPointer(ref head) ;
+            var pl = (int)p & (Vector128<byte>.Count - 1);
+            return pl;
+        }
     }
     
     public class AlignedMemory256<T> : MemoryManager<T> where T : unmanaged
