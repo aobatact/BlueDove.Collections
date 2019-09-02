@@ -399,32 +399,6 @@ namespace BlueDove.VectorMath
             }
         }
 
-        private struct SByteMultiply : IBinomialOperator<sbyte>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public sbyte Calc(sbyte left, sbyte right)
-                => (sbyte)((int)left * (int)right);
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
-        private struct SByteDivide : IBinomialOperator<sbyte>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public sbyte Calc(sbyte left, sbyte right)
-                => (sbyte)((int)left / (int)right);
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
         private struct SByteAnd : IBinomialOperator<sbyte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -542,6 +516,32 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct SByteMultiply : IBinomialOperator<sbyte>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)((int)left * (int)right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct SByteDivide : IBinomialOperator<sbyte>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public sbyte Calc(sbyte left, sbyte right)
+                => (sbyte)((int)left / (int)right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
         private struct ByteAdd : IBinomialOperator<byte>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -617,32 +617,6 @@ namespace BlueDove.VectorMath
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => Avx2.IsSupported;
-            }
-        }
-
-        private struct ByteMultiply : IBinomialOperator<byte>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public byte Calc(byte left, byte right)
-                => (byte)((uint)left * (uint)right);
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
-        private struct ByteDivide : IBinomialOperator<byte>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public byte Calc(byte left, byte right)
-                => (byte)((uint)left / (uint)right);
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
             }
         }
 
@@ -763,6 +737,32 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct ByteMultiply : IBinomialOperator<byte>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public byte Calc(byte left, byte right)
+                => (byte)((uint)left * (uint)right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ByteDivide : IBinomialOperator<byte>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public byte Calc(byte left, byte right)
+                => (byte)((uint)left / (uint)right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
         private struct ShortAdd : IBinomialOperator<short>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -838,32 +838,6 @@ namespace BlueDove.VectorMath
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => Avx2.IsSupported;
-            }
-        }
-
-        private struct ShortMultiply : IBinomialOperator<short>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public short Calc(short left, short right)
-                => (short)((int)left * (int)right);
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
-        private struct ShortDivide : IBinomialOperator<short>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public short Calc(short left, short right)
-                => (short)((int)left / (int)right);
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
             }
         }
 
@@ -984,6 +958,32 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct ShortMultiply : IBinomialOperator<short>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public short Calc(short left, short right)
+                => (short)((int)left * (int)right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ShortDivide : IBinomialOperator<short>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public short Calc(short left, short right)
+                => (short)((int)left / (int)right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
         private struct UShortAdd : IBinomialOperator<ushort>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1059,32 +1059,6 @@ namespace BlueDove.VectorMath
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => Avx2.IsSupported;
-            }
-        }
-
-        private struct UShortMultiply : IBinomialOperator<ushort>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ushort Calc(ushort left, ushort right)
-                => (ushort)((uint)left * (uint)right);
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
-        private struct UShortDivide : IBinomialOperator<ushort>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ushort Calc(ushort left, ushort right)
-                => (ushort)((uint)left / (uint)right);
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
             }
         }
 
@@ -1205,6 +1179,32 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct UShortMultiply : IBinomialOperator<ushort>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)((uint)left * (uint)right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct UShortDivide : IBinomialOperator<ushort>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ushort Calc(ushort left, ushort right)
+                => (ushort)((uint)left / (uint)right);
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
         private struct IntAdd : IBinomialOperator<int>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1280,32 +1280,6 @@ namespace BlueDove.VectorMath
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => Avx2.IsSupported;
-            }
-        }
-
-        private struct IntMultiply : IBinomialOperator<int>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public int Calc(int left, int right)
-                => left * right;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
-        private struct IntDivide : IBinomialOperator<int>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public int Calc(int left, int right)
-                => left / right;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
             }
         }
 
@@ -1465,6 +1439,32 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct IntMultiply : IBinomialOperator<int>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public int Calc(int left, int right)
+                => left * right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct IntDivide : IBinomialOperator<int>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public int Calc(int left, int right)
+                => left / right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
         private struct UIntAdd : IBinomialOperator<uint>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1540,32 +1540,6 @@ namespace BlueDove.VectorMath
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => Avx2.IsSupported;
-            }
-        }
-
-        private struct UIntMultiply : IBinomialOperator<uint>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public uint Calc(uint left, uint right)
-                => left * right;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
-        private struct UIntDivide : IBinomialOperator<uint>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public uint Calc(uint left, uint right)
-                => left / right;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
             }
         }
 
@@ -1725,6 +1699,32 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct UIntMultiply : IBinomialOperator<uint>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public uint Calc(uint left, uint right)
+                => left * right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct UIntDivide : IBinomialOperator<uint>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public uint Calc(uint left, uint right)
+                => left / right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
         private struct LongAdd : IBinomialOperator<long>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1800,32 +1800,6 @@ namespace BlueDove.VectorMath
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => Avx2.IsSupported;
-            }
-        }
-
-        private struct LongMultiply : IBinomialOperator<long>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public long Calc(long left, long right)
-                => left * right;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
-        private struct LongDivide : IBinomialOperator<long>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public long Calc(long left, long right)
-                => left / right;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
             }
         }
 
@@ -1985,6 +1959,32 @@ namespace BlueDove.VectorMath
             }
         }
 
+        private struct LongMultiply : IBinomialOperator<long>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public long Calc(long left, long right)
+                => left * right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct LongDivide : IBinomialOperator<long>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public long Calc(long left, long right)
+                => left / right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
         private struct ULongAdd : IBinomialOperator<ulong>
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2060,32 +2060,6 @@ namespace BlueDove.VectorMath
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => Avx2.IsSupported;
-            }
-        }
-
-        private struct ULongMultiply : IBinomialOperator<ulong>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ulong Calc(ulong left, ulong right)
-                => left * right;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
-            }
-        }
-
-        private struct ULongDivide : IBinomialOperator<ulong>
-        {
-            [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            public ulong Calc(ulong left, ulong right)
-                => left / right;
-
-            public bool IsSupported
-            {
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                get => true;
             }
         }
 
@@ -2242,6 +2216,32 @@ namespace BlueDove.VectorMath
             {
                 [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 get => Avx2.IsSupported;
+            }
+        }
+
+        private struct ULongMultiply : IBinomialOperator<ulong>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ulong Calc(ulong left, ulong right)
+                => left * right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
+            }
+        }
+
+        private struct ULongDivide : IBinomialOperator<ulong>
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public ulong Calc(ulong left, ulong right)
+                => left / right;
+
+            public bool IsSupported
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get => true;
             }
         }
     }

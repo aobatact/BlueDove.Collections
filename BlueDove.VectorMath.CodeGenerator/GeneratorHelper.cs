@@ -71,12 +71,12 @@ namespace BlueDove.VectorMath.CodeGenerator
         Nop,
         Add,
         Subtract,
-        Multiply,
-        Divide,
         And,
         Or,
         Xor,
         AndNot,
+        Multiply,
+        Divide,
     }
 
     public enum ArithmeticTypes
@@ -329,9 +329,9 @@ namespace BlueDove.VectorMath
             }
             else
             {
-                var typeString = ArithmeticTypeStrings[(int) art];
                 var opStr = OpStr(op, art);
                 if (opStr == string.Empty) return default;
+                var typeString = ArithmeticTypeStrings[(int) art];
                 typeName = $"{art}{op}";
                 return $@"
         private struct {typeName} : IBinomialOperator<{typeString}>

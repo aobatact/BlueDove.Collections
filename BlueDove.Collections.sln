@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.VectorMath", "Blue
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.VectorMath.CodeGenerator", "BlueDove.VectorMath.CodeGenerator\BlueDove.VectorMath.CodeGenerator.csproj", "{04BAA15A-686A-40FF-A319-81602021065F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.Matrices", "BlueDove.Matrices\BlueDove.Matrices.csproj", "{239148F3-A1ED-4A94-8829-A3C5E44325FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.Sorts", "BlueDove.Sorts\BlueDove.Sorts.csproj", "{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{04BAA15A-686A-40FF-A319-81602021065F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04BAA15A-686A-40FF-A319-81602021065F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04BAA15A-686A-40FF-A319-81602021065F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{239148F3-A1ED-4A94-8829-A3C5E44325FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{239148F3-A1ED-4A94-8829-A3C5E44325FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{239148F3-A1ED-4A94-8829-A3C5E44325FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{239148F3-A1ED-4A94-8829-A3C5E44325FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
