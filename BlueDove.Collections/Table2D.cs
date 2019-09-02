@@ -3,28 +3,66 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using BlueDove.SlimCollections;
-
+using static BlueDove.Collections.KeyedTable;
 namespace BlueDove.Collections
 {
-    public struct KeyedTable<TKey1, TKey2, TValue> where TKey1 : IEquatable<TKey1> where TKey2 : IEquatable<TKey2>
+    public static class KeyedTable
+    {
+        public static KeyedTable<TKey, TKey, TValue> Create<TKey, TValue>(IEnumerable<TKey> keys,
+            bool throwOnDuplicateKeys = true)
+            where TKey : IEquatable<TKey>
+        {
+            var keysDic = CreateKeys(keys, throwOnDuplicateKeys);
+            return new KeyedTable<TKey, TKey, TValue>(keysDic, keysDic);
+        }
+        
+        internal static DictionarySlim<TKey, int> CreateKeys<TKey>(IEnumerable<TKey> keys,bool throwOnDuplicate)
+            where TKey : IEquatable<TKey>
+        {
+            var firstSize = keys switch
+            {
+                ICollection<TKey> col => col.Count,
+                IReadOnlyCollection<TKey> rCol => rCol.Count,
+                _ => 0
+            };
+
+            var dict = new DictionarySlim<TKey, int>(firstSize);
+            var counter = -1;
+            foreach (var key in keys)
+            {
+                ref var i = ref dict.GetOrAddValueRef(key);
+                if (i == 0) i = ++counter;
+                else if(throwOnDuplicate)
+                {
+                    ThrowDuplicate();
+                }
+            }
+
+            return dict;
+        }
+
+        internal static void ThrowDuplicate() => throw new InvalidOperationException("Duplicate Key");
+        internal static void ThrowKeyNotFound() => throw new KeyNotFoundException();
+    }
+    
+    public readonly struct KeyedTable<TKey1, TKey2, TValue> where TKey1 : IEquatable<TKey1> where TKey2 : IEquatable<TKey2>
     {
         private readonly TValue[] _values;
         private readonly DictionarySlim<TKey1, int> _keys1;
         private readonly DictionarySlim<TKey2, int> _keys2;
 
-        internal KeyedTable(DictionarySlim<TKey1, int> keys1, DictionarySlim<TKey2, int> keys2, TValue[] values)
+        public KeyedTable(DictionarySlim<TKey1, int> keys1, DictionarySlim<TKey2, int> keys2)
+            : this(keys1, keys2, new TValue[keys1.Count * keys2.Count]){}
+        
+        public KeyedTable(DictionarySlim<TKey1, int> keys1, DictionarySlim<TKey2, int> keys2, TValue[] values)
         {
             _values = values;
             _keys1 = keys1;
             _keys2 = keys2;
         }
 
-        public KeyedTable(IEnumerable<TKey1> keys1, IEnumerable<TKey2> keys2, bool throwOnDuplicateKeys = false)
-        {
-            _keys1 = CreateKeys(keys1, throwOnDuplicateKeys);
-            _keys2 = CreateKeys(keys2, throwOnDuplicateKeys);
-            _values = new TValue[_keys1.Count * _keys2.Count];
-        }
+        public KeyedTable(IEnumerable<TKey1> keys1, IEnumerable<TKey2> keys2, bool throwOnDuplicateKeys = true)
+            : this(CreateKeys(keys1, throwOnDuplicateKeys), CreateKeys(keys2, throwOnDuplicateKeys)) {}
         
         public int Key1Count => _keys1.Count;
         public int Key2Count => _keys2.Count;
@@ -82,44 +120,11 @@ namespace BlueDove.Collections
                 return i1 * Key2Count + i2;
             return -1;
         }
-        private static DictionarySlim<TKey, int> CreateKeys<TKey>(IEnumerable<TKey> keys,bool throwOnDuplicate)
-            where TKey : IEquatable<TKey>
-        {
-            var firstSize = keys switch
-            {
-                ICollection<TKey> col => col.Count,
-                IReadOnlyCollection<TKey> rCol => rCol.Count,
-                _ => 0
-            };
-
-            var dict = new DictionarySlim<TKey, int>(firstSize);
-            var counter = -1;
-            foreach (var key in keys)
-            {
-                ref var i = ref dict.GetOrAddValueRef(key);
-                if (i == 0) i = ++counter;
-                else if(throwOnDuplicate)
-                {
-                    ThrowDuplicate();
-                }
-            }
-
-            return dict;
-        }
-
-        private static void ThrowDuplicate()
-        {
-            throw new InvalidOperationException("Duplicate Key");
-        }
-        private static void ThrowKeyNotFound()
-        {
-            throw new KeyNotFoundException();
-        }
         
-        public struct Key1FixedCollection : IReadOnlyCollection<KeyValuePair<TKey2,TValue>>
+        public readonly struct Key1FixedCollection : IReadOnlyCollection<KeyValuePair<TKey2,TValue>>
         {
-            private KeyedTable<TKey1, TKey2, TValue> _keyedTable;
-            private int _index1;
+            private readonly KeyedTable<TKey1, TKey2, TValue> _keyedTable;
+            private readonly int _index1;
 
             public Key1FixedCollection(KeyedTable<TKey1, TKey2, TValue> keyedTable, int index1)
             {
@@ -188,10 +193,10 @@ namespace BlueDove.Collections
             
             public int Count => _keyedTable.Key2Count;
         }
-        public struct Key2FixedCollection : IReadOnlyCollection<KeyValuePair<TKey1,TValue>>
+        public readonly struct Key2FixedCollection : IReadOnlyCollection<KeyValuePair<TKey1,TValue>>
         {
-            private KeyedTable<TKey1, TKey2, TValue> _keyedTable;
-            private int _index2;
+            private readonly KeyedTable<TKey1, TKey2, TValue> _keyedTable;
+            private readonly int _index2;
 
             public Key2FixedCollection(KeyedTable<TKey1, TKey2, TValue> keyedTable, int index2)
             {

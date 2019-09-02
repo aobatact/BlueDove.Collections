@@ -77,7 +77,7 @@ namespace BlueDove.VectorMath
             where TLeft : unmanaged
             where TRight : unmanaged
             where TResult : unmanaged
-            where TOperator : struct, IBinomialOperator<TLeft,TRight,TResult>
+            where TOperator : struct, IBinomialOperator<TLeft, TRight, TResult>
         {
             Debug.Assert(default(TOperator).IsSupported);
             Debug.Assert(Unsafe.SizeOf<TLeft>() == Unsafe.SizeOf<TRight>());
@@ -93,7 +93,7 @@ namespace BlueDove.VectorMath
             where TLeft : unmanaged
             where TRight : unmanaged
             where TResult : unmanaged
-            where TOperator : struct, IBinomialOperator<Vector128<TLeft>,Vector128<TRight>,Vector128<TResult>>
+            where TOperator : struct, IBinomialOperator<Vector128<TLeft>, Vector128<TRight>, Vector128<TResult>>
         {
             Debug.Assert(length >= Vector128<TLeft>.Count);
             Debug.Assert(default(TOperator).IsSupported);
@@ -121,7 +121,7 @@ namespace BlueDove.VectorMath
             where TLeft : unmanaged
             where TRight : unmanaged
             where TResult : unmanaged
-            where TOperator : struct, IBinomialOperator<Vector256<TLeft>,Vector256<TRight>,Vector256<TResult>>
+            where TOperator : struct, IBinomialOperator<Vector256<TLeft>, Vector256<TRight>, Vector256<TResult>>
         {
             Debug.Assert(length >= Vector256<TLeft>.Count);
             Debug.Assert(default(TOperator).IsSupported);
