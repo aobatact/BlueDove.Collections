@@ -6,6 +6,7 @@ using System.IO;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
+
 namespace BlueDove.Collections.Heaps
 {
     public class ArrayBinomialHeap<T> : IHeap<T>
@@ -180,30 +181,29 @@ namespace BlueDove.Collections.Heaps
         }
     }
 
+#nullable enable
     public class TreeBinomialHeap<T> : IHeap<T>
         where T : IComparable<T>
     {
-        private Node root;
-        private Stack<Node> cache;
-        class Node
+        private sealed class Node
         {
-            public Node(){}
-            public Node(T data, int size, Node parent, Node next, Node child)
+            public Node(T data, int size = 1, Node? parent = default, Node? next = default, Node? child = default)
             {
-                this.data = data;
-                Size = size;
+                this.Data = data;
+                Degree = size;
                 Parent = parent;
                 Next = next;
                 Child = child;
             }
 
-            public T data { get; set; }
-            public int Size { get; set; }
-            public Node Parent { get; set; }
-            public Node Next { get; set; }
-            public Node Child { get; set; }
+            public Node? Parent { get; set; }
+            public Node? Next { get; set; }
+            public Node? Child { get; set; }
+            public int Degree { get; set; }
+            public T Data { get; set; }
+            public int Size => 1 << Degree;
 
-            public Node ChildLast
+            public Node? ChildLast
             {
                 get
                 {
@@ -218,115 +218,188 @@ namespace BlueDove.Collections.Heaps
                     return n;
                 }
             }
-
-            public void Clear()
-            {
-                data = default;
-                Size = 0;
-                Parent = null;
-                Next = null;
-                Child = null;
-            }
         }
-        
-        Node Publish()
-        {
-            if (cache.TryPop(out var p))
-            {
-                return p;
-            }
-            return new Node();
-        }
+        private Node? root;
 
-        Node Merge(Node a, Node b)
+        private static Node Union(Node a, Node? b)
         {
-            Node c = null;
-            Node h = Publish();
-            var n = h;
-            if (a.Size == b.Size)
+            if (b == null)
+                return a;
+            Node? al = a;
+            Node c, h;
+            Node? r = null;
+            Node? m;
+            if (al.Degree < b.Degree)
             {
-                var bm = b.Next;
-                (h.Next, a) = SubMerge(a, b);
-                b = bm;
+                h = c = al;
+                SwapNext(ref al, ref b);
             }
-            else if(a.Size < b.Size)
+            else if (al.Degree > b.Degree)
             {
-                h.Next = a;
-                a = a.Next;
+                h = c = b;
+                SwapNext(ref b,ref al);
             }
             else
             {
-                h.Next = b;
-                b = b.Next;
+                var tb = b.Next;
+                h = c = Merge(al, b);
+                al = al.Next;
+                b = tb;
             }
 
             while (true)
             {
-                if (c?.Size == a.Size)
+                if (al == null)
                 {
-                    if (a.Size == b.Size)
-                    {
-                        n = n.Next = c;
-                        c = null;
-                        (a, b) = SubMerge(a, b);
-                    }
-                    else
-                    {
-                        (n.Next, a) = SubMerge(c, a);
-                        n = n.Next;
-                        c = null;
-                    }
+                    m = b;
+                    break;
                 }
+                if (b == null)
+                {
+                    m = al;
+                    break;
+                }
+                if (al.Degree == b.Degree)
+                {
+                    if (r != null) c = c.Next = r;
 
-                if (a.Size == b.Size)
-                {
+                    var bn = b.Next;
+                    var an = al.Next;
+                    r = Merge(al, b);
+                    al = an;
+                    b = bn;
                 }
-                throw new NotImplementedException();
+                else if (al.Degree < b.Degree)
+                {
+                    ConnectNext(ref al, ref r, ref c);
+                }
+                else
+                {
+                    ConnectNext(ref b, ref r, ref c);
+                }
             }
-            
-            
+
+            Debug.Assert(m != null);
+            h.Next = m;
+            return h;
         }
 
-        static (Node Head, Node Next) SubMerge(Node l, Node r)
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void ConnectNext([NotNull]ref Node? min, ref Node? r, ref Node h)
         {
-            Debug.Assert(l.Size == r.Size);
-            Node p, q;
-            (p, q) = l.data.CompareTo(r.data) >= 0 ? (r, l) : (l, r);
-            p.ChildLast.Next = q;
-            q.Parent = p;
-            p.Size <<= 1;
-            return (p, q.Next);
+            if (r != null)
+            {
+                if (min.Degree == r.Degree)
+                {
+                    var an = min.Next;
+                    r = Merge(min, r);
+                    min = an;
+                    return;
+                }
+                Debug.Assert(min.Degree > r.Degree);
+                h = h.Next = r;
+                r = null;
+            }
+            var an1 = min.Next;
+            h = h.Next = min;
+            min = an1;
         }
         
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void SwapNext(ref Node node, ref Node node1)
+        {
+            var t = node.Next;
+            node.Next = node1;
+            node1 = node1.Next;
+            node = t;
+        }
+
+        private static Node Merge(Node x, Node y)
+        {
+            if (x.Data.CompareTo(y.Data) > 0) (x, y) = (y, x);
+            Debug.Assert(x.Degree == y.Degree);
+            y.Parent = x;
+            y.Next = x.Child;
+            x.Child = y;
+            x.Degree++;
+            return x;
+        }
+
         public void Push(T value)
         {
-            throw new NotImplementedException();
+            root = Union(new Node(value), root);
+            Count++;
         }
 
         public T Peek()
         {
-            throw new NotImplementedException();
+            if(root == null) BufferUtil.ThrowNoItem();
+            return SearchMin(out _).Data;
         }
 
         public T Pop()
         {
-            throw new NotImplementedException();
+            if (root == null) BufferUtil.ThrowNoItem();
+            var min = SearchMin(out var prev);
+            if (prev != null)
+            {
+                Debug.Assert(min == prev.Next);
+                prev.Next = min.Next;
+            }
+            root = Union(root, min.Child);
+            Count--;
+            return min.Data;
+        }
+
+        private Node? SearchMin(out Node? prev)
+        {
+            var c = root;
+            var m = c;
+            prev = null;
+            while (c != null)
+            {
+                var cn = c.Next;
+                if (m.Data.CompareTo(cn.Data) > 0)
+                {
+                    m = cn;
+                    prev = c;
+                }
+
+                c = cn;
+            }
+            
+            return m;
         }
 
         public bool TryPeek(out T value)
         {
-            throw new NotImplementedException();
+            if (root == null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = SearchMin(out _).Data;
+            return true;
         }
 
         public bool TryPop(out T value)
-        {
-            throw new NotImplementedException();
+        {            
+            if (root == null)
+            {
+                value = default;
+                return false;
+            }
+
+            value = Pop();
+            return true;
         }
 
         public int Count { get; private set; }
         public void Clear()
         {
-            throw new NotImplementedException();
+            root = null;
+            Count = 0;
         }
     }
 }

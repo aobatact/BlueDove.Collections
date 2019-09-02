@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 
 namespace BlueDove.Collections.Heaps
 {
@@ -105,7 +106,7 @@ namespace BlueDove.Collections.Heaps
                 if (dr < Count)
                 {
                     ref var vl = ref _values[dl];
-                    ref var vr = ref _values[dr];
+                    ref var vr = ref Unsafe.Add(ref vl, 1);
                     var comp = vl.CompareTo(vr) > 0;
                     ref var max = ref comp ? ref vl : ref vr;
                     if (max.CompareTo(value) < 0)

@@ -4,14 +4,14 @@ using System.Runtime.CompilerServices;
 
 namespace BlueDove.Collections.Heaps
 {
-    public class RadixHeap<T, TConverter> : IHeap<T> 
+    public class RadixHeap<T, TConverter> : IHeap<T>
         where T : IComparable<T> where TConverter : struct, IUnsignedValueConverter<T>
     {
         private readonly T[][] _buffers;
         private readonly int[] _bufferSizes;
         private T Last { get; set; }
         public int Count { get; private set; }
-        
+
         public void Clear()
         {
             Count = 0;
@@ -21,12 +21,14 @@ namespace BlueDove.Collections.Heaps
                 {
                     _buffers.AsSpan().Fill(null);
                 }
+
                 _bufferSizes[i] = 0;
             }
         }
 
         public RadixHeap()
         {
+            Debug.Assert(Unsafe.SizeOf<TConverter>() == 0);
             var bufferSize = default(TConverter).BufferSize();
             _buffers = new T[bufferSize][];
             for (var index = 0; index < _buffers.Length; index++)
@@ -52,6 +54,7 @@ namespace BlueDove.Collections.Heaps
             {
                 return val;
             }
+
             BufferUtil.ThrowNoItem();
             return default;
         }
@@ -64,6 +67,7 @@ namespace BlueDove.Collections.Heaps
                 value = default;
                 return false;
             }
+
             Pull();
             value = Last;
             Count--;
@@ -84,7 +88,7 @@ namespace BlueDove.Collections.Heaps
             value = Last;
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Peek()
         {
@@ -92,10 +96,11 @@ namespace BlueDove.Collections.Heaps
             {
                 BufferUtil.ThrowNoItem();
             }
+
             Pull();
             return Last;
         }
-        
+
         private void Pull()
         {
             Debug.Assert(Count > 0);
@@ -123,14 +128,10 @@ namespace BlueDove.Collections.Heaps
             Debug.Assert(target < _buffers.Length);
             ref var buffer = ref _buffers[target];
             ref var bfs = ref _bufferSizes[target];
-            if (buffer.Length == bfs)
-            { 
-                BufferUtil.Expand(ref buffer);
-            }
-            
+            if (buffer.Length == bfs) BufferUtil.Expand(ref buffer);
             buffer[bfs++] = value;
         }
-        
+
         private static T Min(Span<T> buffer)
         {
             var min = buffer[0];
@@ -144,16 +145,17 @@ namespace BlueDove.Collections.Heaps
 
             return min;
         }
-
     }
 
     public class InHeapRadixHeap<T, THeap, TConverter> : IHeap<T>
-        where T : IComparable<T> where THeap : IHeap<T> where TConverter : struct, IUnsignedValueConverter<T>
+        where T : IComparable<T> where THeap : IHeap<T> where TConverter : unmanaged, IUnsignedValueConverter<T>
+
     {
         private readonly THeap[] _innerHeaps;
 
         public InHeapRadixHeap(Func<THeap> factory)
         {
+            Debug.Assert(Unsafe.SizeOf<TConverter>() == 0);
             _innerHeaps = new THeap[default(TConverter).BufferSize()];
             for (var i = 0; i < _innerHeaps.Length; i++)
             {
@@ -162,7 +164,7 @@ namespace BlueDove.Collections.Heaps
         }
 
         private T Last { get; set; }
-        
+
         public void Push(T value)
         {
             Debug.Assert(Last.CompareTo(value) <= 0);
@@ -175,30 +177,32 @@ namespace BlueDove.Collections.Heaps
         {
             _innerHeaps[target].Push(value);
         }
-        
+
         public T Pop()
-        {            
+        {
             if (!TryPop(out var val))
             {
                 return val;
             }
+
             BufferUtil.ThrowNoItem();
             return default;
         }
 
         public bool TryPop(out T value)
-        {            
+        {
             if (Count == 0)
             {
                 value = default;
                 return false;
             }
+
             Pull();
             value = Last;
             Count--;
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Peek()
         {
@@ -206,6 +210,7 @@ namespace BlueDove.Collections.Heaps
             {
                 BufferUtil.ThrowNoItem();
             }
+
             Pull();
             return Last;
         }
@@ -223,11 +228,11 @@ namespace BlueDove.Collections.Heaps
             value = Last;
             return true;
         }
-        
+
         private void Pull()
         {
             Debug.Assert(Count > 0);
-            if(_innerHeaps[0].Count > 0) return;
+            if (_innerHeaps[0].Count > 0) return;
             var i = 0;
             while (_innerHeaps[++i].Count != 0)
             {
@@ -244,6 +249,7 @@ namespace BlueDove.Collections.Heaps
         }
 
         public int Count { get; private set; }
+
         public void Clear()
         {
             Count = 0;

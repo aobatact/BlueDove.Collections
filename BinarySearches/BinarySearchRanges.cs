@@ -26,12 +26,20 @@ SOFTWARE.
 */
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace BinarySearches
 {
-    
     public static class BinarySearchRanges
     {
+        public static Range BinarySearchRange<T, TComparable>(this ReadOnlySpan<T> values, TComparable comparable)
+            where TComparable : IComparable<T> =>
+            BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+
+        public static Range BinarySearchRange<T, TComparable>(this Span<T> values, TComparable comparable)
+            where TComparable : IComparable<T> =>
+            BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+
         //Copied from corefx
         public static int BinarySearch<T, TComparable>(
             ref T spanStart, int length, TComparable comparable)
@@ -210,10 +218,6 @@ namespace BinarySearches
                     lo = i + 1;
                 }
             }
-            // If none found, then a negative number that is the bitwise complement
-            // of the index of the next element that is larger than or, if there is
-            // no larger element, the bitwise complement of `length`, which
-            // is `lo` at this point.
             return hi;
         }
         
@@ -238,10 +242,6 @@ namespace BinarySearches
                     hi = i - 1;
                 }
             }
-            // If none found, then a negative number that is the bitwise complement
-            // of the index of the next element that is larger than or, if there is
-            // no larger element, the bitwise complement of `length`, which
-            // is `lo` at this point.
             return lo;
         }
     }

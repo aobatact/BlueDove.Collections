@@ -68,17 +68,12 @@ namespace BlueDove.Collections.Heaps
     }
     
     public readonly struct KeyValueConverter<TKey, TValue, TConverter> : IUnsignedValueConverter<(TKey, TValue)>
-        where TConverter : IUnsignedValueConverter<TKey> where TKey : IComparable<TKey>
+        where TConverter : unmanaged, IUnsignedValueConverter<TKey> where TKey : IComparable<TKey>
     {
-        private readonly TConverter _converter;
-
-        public KeyValueConverter(TConverter converter) 
-            => _converter = converter;
-
         public int GetIndex((TKey, TValue) last, (TKey, TValue) value) 
-            => _converter.GetIndex(last.Item1, value.Item1);
+            => default(TConverter).GetIndex(last.Item1, value.Item1);
 
         public int BufferSize() 
-            => _converter.BufferSize();
+            => default(TConverter).BufferSize();
     }
 }
