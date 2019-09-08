@@ -210,10 +210,7 @@ namespace BlueDove.Collections.Heaps
                     if (Child == null)
                         return null;
                     var n = Child;
-                    while (n.Next != null)
-                    {
-                        n = n.Next;
-                    }
+                    while (n.Next != null) n = n.Next;
 
                     return n;
                 }
@@ -285,33 +282,38 @@ namespace BlueDove.Collections.Heaps
         }
 
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void ConnectNext([NotNull]ref Node? min, ref Node? r, ref Node h)
+        private static void ConnectNext(ref Node min, ref Node? r, ref Node h)
         {
+#nullable disable
+            ref Node mr = ref min;
+#nullable enable
             if (r != null)
             {
-                if (min.Degree == r.Degree)
+                if (mr.Degree == r.Degree)
                 {
-                    var an = min.Next;
-                    r = Merge(min, r);
-                    min = an;
+                    var an = mr.Next;
+                    r = Merge(mr, r);
+                    mr = an;
                     return;
                 }
-                Debug.Assert(min.Degree > r.Degree);
+                Debug.Assert(mr.Degree > r.Degree);
                 h = h.Next = r;
                 r = null;
             }
-            var an1 = min.Next;
-            h = h.Next = min;
-            min = an1;
+            var an1 = mr.Next;
+            h = h.Next = mr;
+            mr = an1;
         }
         
         //[MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void SwapNext(ref Node node, ref Node node1)
         {
+            #nullable disable
             var t = node.Next;
             node.Next = node1;
             node1 = node1.Next;
             node = t;
+            #nullable enable
         }
 
         private static Node Merge(Node x, Node y)
@@ -351,8 +353,9 @@ namespace BlueDove.Collections.Heaps
             return min.Data;
         }
 
-        private Node? SearchMin(out Node? prev)
+        private Node SearchMin(out Node? prev)
         {
+#nullable disable
             var c = root;
             var m = c;
             prev = null;
@@ -369,26 +372,31 @@ namespace BlueDove.Collections.Heaps
             }
             
             return m;
+#nullable enable
         }
 
-        public bool TryPeek(out T value)
+        public bool TryPeek([MaybeNullWhen(false)]out T value)
         {
             if (root == null)
             {
+#nullable disable
                 value = default;
                 return false;
+#nullable enable
             }
 
             value = SearchMin(out _).Data;
             return true;
         }
 
-        public bool TryPop(out T value)
+        public bool TryPop([MaybeNullWhen(false)]out T value)
         {            
             if (root == null)
             {
+#nullable disable
                 value = default;
                 return false;
+#nullable enable
             }
 
             value = Pop();

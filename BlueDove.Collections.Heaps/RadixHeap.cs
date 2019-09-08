@@ -17,10 +17,8 @@ namespace BlueDove.Collections.Heaps
             Count = 0;
             for (var i = 0; i < _bufferSizes.Length; i++)
             {
-                if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
-                {
+                if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) 
                     _buffers.AsSpan().Fill(null);
-                }
 
                 _bufferSizes[i] = 0;
             }
@@ -31,10 +29,7 @@ namespace BlueDove.Collections.Heaps
             Debug.Assert(Unsafe.SizeOf<TConverter>() == 0);
             var bufferSize = default(TConverter).BufferSize();
             _buffers = new T[bufferSize][];
-            for (var index = 0; index < _buffers.Length; index++)
-            {
-                _buffers[index] = Array.Empty<T>();
-            }
+            for (var index = 0; index < _buffers.Length; index++) _buffers[index] = Array.Empty<T>();
 
             _bufferSizes = new int[bufferSize];
         }
@@ -51,9 +46,7 @@ namespace BlueDove.Collections.Heaps
         public T Pop()
         {
             if (TryPop(out var val))
-            {
                 return val;
-            }
 
             BufferUtil.ThrowNoItem();
             return default;
@@ -92,10 +85,7 @@ namespace BlueDove.Collections.Heaps
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Peek()
         {
-            if (Count == 0)
-            {
-                BufferUtil.ThrowNoItem();
-            }
+            if (Count == 0) BufferUtil.ThrowNoItem();
 
             Pull();
             return Last;
@@ -106,17 +96,11 @@ namespace BlueDove.Collections.Heaps
             Debug.Assert(Count > 0);
             if (_bufferSizes[0] != 0) return;
             var i = 0;
-            while (_bufferSizes[++i] != 0)
-            {
-                Debug.Assert(i + 1 < _buffers.Length);
-            }
+            while (_bufferSizes[++i] != 0) Debug.Assert(i + 1 < _buffers.Length);
 
             var buffer = _buffers[i].AsSpan(0, _bufferSizes[i]);
             var nl = Min(buffer);
-            foreach (var t in buffer)
-            {
-                Add2Buffer(t, default(TConverter).GetIndex(nl, t));
-            }
+            foreach (var t in buffer) Add2Buffer(t, default(TConverter).GetIndex(nl, t));
 
             _bufferSizes[i] = 0;
             Last = nl;
@@ -136,12 +120,8 @@ namespace BlueDove.Collections.Heaps
         {
             var min = buffer[0];
             foreach (var value in buffer)
-            {
                 if (min.CompareTo(value) > 0)
-                {
                     min = value;
-                }
-            }
 
             return min;
         }
@@ -149,7 +129,6 @@ namespace BlueDove.Collections.Heaps
 
     public class InHeapRadixHeap<T, THeap, TConverter> : IHeap<T>
         where T : IComparable<T> where THeap : IHeap<T> where TConverter : unmanaged, IUnsignedValueConverter<T>
-
     {
         private readonly THeap[] _innerHeaps;
 
@@ -157,10 +136,7 @@ namespace BlueDove.Collections.Heaps
         {
             Debug.Assert(Unsafe.SizeOf<TConverter>() == 0);
             _innerHeaps = new THeap[default(TConverter).BufferSize()];
-            for (var i = 0; i < _innerHeaps.Length; i++)
-            {
-                _innerHeaps[i] = factory();
-            }
+            for (var i = 0; i < _innerHeaps.Length; i++) _innerHeaps[i] = factory();
         }
 
         private T Last { get; set; }
@@ -173,17 +149,12 @@ namespace BlueDove.Collections.Heaps
             Add2Buffer(value, target);
         }
 
-        private void Add2Buffer(T value, int target)
-        {
-            _innerHeaps[target].Push(value);
-        }
+        private void Add2Buffer(T value, int target) => _innerHeaps[target].Push(value);
 
         public T Pop()
         {
             if (!TryPop(out var val))
-            {
                 return val;
-            }
 
             BufferUtil.ThrowNoItem();
             return default;
@@ -206,10 +177,7 @@ namespace BlueDove.Collections.Heaps
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Peek()
         {
-            if (Count == 0)
-            {
-                BufferUtil.ThrowNoItem();
-            }
+            if (Count == 0) BufferUtil.ThrowNoItem();
 
             Pull();
             return Last;
@@ -234,16 +202,12 @@ namespace BlueDove.Collections.Heaps
             Debug.Assert(Count > 0);
             if (_innerHeaps[0].Count > 0) return;
             var i = 0;
-            while (_innerHeaps[++i].Count != 0)
-            {
+            while (_innerHeaps[++i].Count != 0) 
                 Debug.Assert(i + 1 < _innerHeaps.Length);
-            }
 
             var nl = _innerHeaps[i].Pop();
-            while (_innerHeaps[i].TryPop(out var value))
-            {
+            while (_innerHeaps[i].TryPop(out var value)) 
                 Add2Buffer(value, default(TConverter).GetIndex(Last, value));
-            }
 
             Last = nl;
         }
@@ -253,10 +217,7 @@ namespace BlueDove.Collections.Heaps
         public void Clear()
         {
             Count = 0;
-            foreach (var heap in _innerHeaps)
-            {
-                heap.Clear();
-            }
+            foreach (var heap in _innerHeaps) heap.Clear();
         }
     }
 }

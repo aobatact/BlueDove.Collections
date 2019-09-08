@@ -11,15 +11,16 @@
       </ProjectReference>
     </ItemGroup>
 
+
     <ItemGroup>
         <Reference Include="BlueDove.SlimCollections.NoLF">
-            <HintPath>BlueDove_SlimCollections_NoLF.dll</HintPath>
+            <HintPath>BlueDove.SlimCollections.NoLF.dll</HintPath>
             <Aliases>NoLF</Aliases>
             <Private>true</Private>
             <SpecificVersion>false</SpecificVersion>
         </Reference>
     </ItemGroup>
-
+    
     <ItemGroup>
       <PackageReference Include="BenchmarkDotNet" Version="0.11.5" />
     </ItemGroup>

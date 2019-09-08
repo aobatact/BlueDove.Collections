@@ -19,10 +19,7 @@ namespace BlueDove.Collections.Heaps
 
         public void Push(T value)
         {
-            if (Count >= _values.Length)
-            {
-                BufferUtil.Expand(ref _values);
-            }
+            if (Count >= _values.Length) BufferUtil.Expand(ref _values);
 
             CascadeUp(value, Count++);
         }
@@ -36,10 +33,7 @@ namespace BlueDove.Collections.Heaps
 
         public T Pop()
         {            
-            if (Count == 0)
-            {
-                BufferUtil.ThrowNoItem();
-            }
+            if (Count == 0) BufferUtil.ThrowNoItem();
             var ret = _values[0];
             CascadeDown(_values[--Count], Count);
             return ret;
@@ -73,6 +67,7 @@ namespace BlueDove.Collections.Heaps
         
         public void Clear()
         {
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) Array.Fill(_values, default);
             Count = 0;
         }
 
@@ -93,20 +88,19 @@ namespace BlueDove.Collections.Heaps
             }
 
             currentPos = value;
-
         }
 
         private void CascadeDown(T value, int oldIndex)
         {
             ref var cur = ref _values[oldIndex];
-            do
+            while (true)
             {
                 var dl = (oldIndex << 1) + 1;
                 var dr = dl + 1;
                 if (dr < Count)
                 {
                     ref var vl = ref _values[dl];
-                    ref var vr = ref Unsafe.Add(ref vl, 1);
+                    ref var vr = ref Unsafe.Add(ref vl, (IntPtr)1);
                     var comp = vl.CompareTo(vr) > 0;
                     ref var max = ref comp ? ref vl : ref vr;
                     if (max.CompareTo(value) < 0)
@@ -128,7 +122,7 @@ namespace BlueDove.Collections.Heaps
                     }
                 }
                 break;
-            } while (true);
+            }
 
             cur = value;
         }
