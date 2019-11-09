@@ -8,7 +8,7 @@ namespace BlueDove.Collections.Tests
 {
     public class AlignedTest
     {
-        [Theory]
+        //[Theory]
         [InlineData(0)]
         [InlineData(15)]
         [InlineData(16)]

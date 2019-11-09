@@ -17,7 +17,11 @@ namespace BlueDove.Collections.Heaps
         {
             Debug.Assert(value >= last);
             if (last == value) return 0;
+#if !NET_STANDARD_2_0
             return BitOperations.Log2(last ^ value) + 1;
+#elif UNITY_2019_2_OR_NEWER
+            return 0;
+#endif
         }
 
         public int BufferSize() 

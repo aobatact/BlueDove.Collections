@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
-
+#if !NET_STANDARD_2_0
 namespace BlueDove.Collections.Heaps
 {
     /// <summary>
@@ -128,3 +128,4 @@ namespace BlueDove.Collections.Heaps
         }
     }
 }
+#endif

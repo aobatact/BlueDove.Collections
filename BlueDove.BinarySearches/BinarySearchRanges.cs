@@ -24,11 +24,61 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 */
+
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace BinarySearches
+#if NETSTANDARD2_0
+namespace System
+{
+    public readonly struct Range
+    {
+        public Range(int start, int end)
+        {
+            Start = start;
+            End = end;
+        }
+
+        public Index Start { get; }
+        public Index End { get; }
+    }
+
+
+    public readonly struct Index
+    {
+        private readonly int _value;
+
+        public Index(int value)
+        {
+            _value = value;
+        }
+
+        public int Value
+        {
+            get
+            {
+                if (this._value < 0)
+                    return ~this._value;
+                return this._value;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Index FromStart(int value)
+        {
+            return new Index(value);
+        }
+
+        public static implicit operator Index(int value)
+        {
+            return Index.FromStart(value);
+        }
+    }
+}
+#endif
+
+namespace BlueDove.BinarySearches
 {
     public static class BinarySearchRanges
     {
@@ -39,6 +89,11 @@ namespace BinarySearches
         public static Range BinarySearchRange<T, TComparable>(this Span<T> values, TComparable comparable)
             where TComparable : IComparable<T> =>
             BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+
+        public static Range BinarySearchRange<T>(this ReadOnlySpan<ReadOnlyMemory<T>> values, ReadOnlySpan<T> others)
+            where T : IComparable<T> =>
+            BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+                default(ReadOnlyMemorySpanExtractor<T>));
 
         //Copied from corefx
         public static int BinarySearch<T, TComparable>(
@@ -56,8 +111,8 @@ namespace BinarySearches
                 //       and thus cannot overflow an uint. 
                 //       Saves one subtraction per loop compared to 
                 //       `int i = lo + ((hi - lo) >> 1);`
-                int i = (int)(((uint)hi + (uint)lo) >> 1);
- 
+                int i = (int) (((uint) hi + (uint) lo) >> 1);
+
                 int c = comparable.CompareTo(Unsafe.Add(ref spanStart, i));
                 if (c == 0)
                 {
@@ -72,13 +127,14 @@ namespace BinarySearches
                     hi = i - 1;
                 }
             }
+
             // If none found, then a negative number that is the bitwise complement
             // of the index of the next element that is larger than or, if there is
             // no larger element, the bitwise complement of `length`, which
             // is `lo` at this point.
             return ~lo;
         }
-        
+
         public static int BinarySearch<T, TComparable>(
             ref T spanStart, int length, TComparable comparable, out int lo, out int hi)
             where TComparable : IComparable<T>
@@ -94,8 +150,8 @@ namespace BinarySearches
                 //       and thus cannot overflow an uint. 
                 //       Saves one subtraction per loop compared to 
                 //       `int i = lo + ((hi - lo) >> 1);`
-                int i = (int)(((uint)hi + (uint)lo) >> 1);
- 
+                int i = (int) (((uint) hi + (uint) lo) >> 1);
+
                 int c = comparable.CompareTo(Unsafe.Add(ref spanStart, i));
                 if (c == 0)
                 {
@@ -110,6 +166,7 @@ namespace BinarySearches
                     hi = i - 1;
                 }
             }
+
             // If none found, then a negative number that is the bitwise complement
             // of the index of the next element that is larger than or, if there is
             // no larger element, the bitwise complement of `length`, which
@@ -124,7 +181,9 @@ namespace BinarySearches
             int lo = 0;
             int hi = length - 1;
             int lhi;
+
             #region FirstMatch
+
             // If length == 0, hi == -1, and loop will not be entered
             while (lo <= hi)
             {
@@ -134,8 +193,8 @@ namespace BinarySearches
                 //       and thus cannot overflow an uint. 
                 //       Saves one subtraction per loop compared to 
                 //       `int i = lo + ((hi - lo) >> 1);`
-                int i = (int)(((uint)hi + (uint)lo) >> 1);
- 
+                int i = (int) (((uint) hi + (uint) lo) >> 1);
+
                 int c = comparable.CompareTo(Unsafe.Add(ref spanStart, i));
                 if (c == 0)
                 {
@@ -153,8 +212,9 @@ namespace BinarySearches
             }
 
             return new Range(lo, lo);
+
             #endregion
-            
+
             found:
 
             #region Lower
@@ -173,7 +233,7 @@ namespace BinarySearches
                     lo = i + 1;
                 }
             }
-            
+
             #endregion
 
             #region Upper
@@ -191,13 +251,12 @@ namespace BinarySearches
                     hi = i - 1;
                 }
             }
-            
+
             #endregion
 
             return new Range(lhi, hlo);
-            
         }
-        
+
         public static int LowerBound<T, TComparable>(
             ref T spanStart, int length, TComparable comparable)
             where TComparable : IComparable<T>
@@ -218,9 +277,10 @@ namespace BinarySearches
                     lo = i + 1;
                 }
             }
+
             return hi;
         }
-        
+
         public static int UpperBound<T, TComparable>(
             ref T spanStart, int length, TComparable comparable)
             where TComparable : IComparable<T>
@@ -242,7 +302,110 @@ namespace BinarySearches
                     hi = i - 1;
                 }
             }
+
             return lo;
         }
+
+        public static Range BinarySearchRange<T, TCollection, TSpanExtractor>(ref TCollection spanStart, int length,
+            ReadOnlySpan<T> values, TSpanExtractor extractor) where T : IComparable<T>
+            where TSpanExtractor : ISpanExtractor<T, TCollection>
+        {
+            int lo = 0;
+            int hi = length - 1;
+            int lhi;
+
+            #region FirstMatch
+
+            // If length == 0, hi == -1, and loop will not be entered
+            while (lo <= hi)
+            {
+                // PERF: `lo` or `hi` will never be negative inside the loop,
+                //       so computing median using uints is safe since we know 
+                //       `length <= int.MaxValue`, and indices are >= 0
+                //       and thus cannot overflow an uint. 
+                //       Saves one subtraction per loop compared to 
+                //       `int i = lo + ((hi - lo) >> 1);`
+                var i = (int) (((uint) hi + (uint) lo) >> 1);
+                var c = values.SequenceCompareTo(extractor.ExtractSpan(Unsafe.Add(ref spanStart, i)));
+                if (c == 0)
+                {
+                    lhi = i;
+                    goto found;
+                }
+                else if (c > 0)
+                {
+                    lo = i + 1;
+                }
+                else
+                {
+                    hi = i - 1;
+                }
+            }
+
+            return new Range(lo, lo);
+
+            #endregion
+
+            found:
+
+            #region Lower
+
+            var hlo = lhi;
+            while (lhi > lo)
+            {
+                var i = (int) (((uint) lhi + (uint) lo) >> 1);
+                var c = values.SequenceCompareTo(extractor.ExtractSpan(Unsafe.Add(ref spanStart, i)));
+                if (c >= 0)
+                {
+                    lhi = i;
+                }
+                else
+                {
+                    lo = i + 1;
+                }
+            }
+
+            #endregion
+
+            #region Upper
+
+            while (hi > hlo)
+            {
+                var i = (int) (((uint) lhi + (uint) lo) >> 1);
+                var c = values.SequenceCompareTo(extractor.ExtractSpan(Unsafe.Add(ref spanStart, i)));
+                if (c <= 0)
+                {
+                    hlo = i;
+                }
+                else
+                {
+                    hi = i - 1;
+                }
+            }
+
+            #endregion
+
+            return new Range(lhi, hlo);
+        }
+    }
+    
+    public interface ISpanExtractor<T, in TCollection>
+    {
+        ReadOnlySpan<T> ExtractSpan(TCollection collection);
+    }
+
+    public readonly struct MemorySpanExtractor<T> : ISpanExtractor<T, Memory<T>>
+    {
+        public ReadOnlySpan<T> ExtractSpan(Memory<T> collection) => collection.Span;
+    }
+
+    public readonly struct ReadOnlyMemorySpanExtractor<T> : ISpanExtractor<T, ReadOnlyMemory<T>>
+    {
+        public ReadOnlySpan<T> ExtractSpan(ReadOnlyMemory<T> collection) => collection.Span;
+    }
+    
+    public readonly struct StringSpanExtractor : ISpanExtractor<char, string>
+    {
+        public ReadOnlySpan<char> ExtractSpan(string collection) => collection.AsSpan();
     }
 }

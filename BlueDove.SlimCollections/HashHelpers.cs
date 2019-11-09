@@ -11,6 +11,41 @@ namespace BlueDove.SlimCollections
 {
     internal static partial class HashHelpers
     {
+        internal static readonly int[] LoadFactor = {
+            0,
+            2,
+            4,
+            8,
+            16,
+            25,
+            51,
+            102,
+            204,
+            409,
+            819,
+            1638,
+            3276,
+            6553,
+            13107,
+            26214,
+            52428,
+            104857,
+            209715,
+            419430,
+            838860,
+            1677721,
+            3355443,
+            6710886,
+            13421772,
+            26843545,
+            53687091,
+            107374182,
+            214748364,
+            429496729,
+            858993459,
+            int.MaxValue, 
+        };
+        
         internal static int PowerOf2(int v)
         {
             if ((v & (v - 1)) == 0) return v;

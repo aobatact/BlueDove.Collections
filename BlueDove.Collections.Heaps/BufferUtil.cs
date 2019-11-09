@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
+#if !NET_STANDARD_2_0
 
 namespace BlueDove.Collections.Heaps
 {
@@ -23,3 +24,4 @@ namespace BlueDove.Collections.Heaps
         }
     }
 }
+#endif
