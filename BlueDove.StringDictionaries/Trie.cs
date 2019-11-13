@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +40,15 @@ namespace BlueDove.StringDictionaries
 
             value = default;
             return false;
-            
+        }
+
+        public void GetPrefixMatches(ReadOnlyMemory<TKey> value)
+        {
+            var stack = new NodeStack();
+            if (SearchNodes(_root, ref value, ref stack, out var length))
+            {
+                var node = stack.Peek();
+            }
         }
 
         #region Enumerable
@@ -245,6 +252,152 @@ namespace BlueDove.StringDictionaries
                     node = nodeA;
                     return aRes;
                 }
+            }
+        }
+
+        private static bool SearchNodes<TStack>(Node root, ref ReadOnlyMemory<TKey> value, ref TStack stack, out int length)
+            where TStack : INodeStack
+        {
+            var nodeComp = new NodeComparable(value);
+            stack.Push(root);
+            while (true)
+            {
+                var nodes = root.NodesSpan;
+                if (nodes.IsEmpty)
+                {
+                    length = value.Length;
+                    return true;
+                }
+
+                var index = nodes.BinarySearch(nodeComp);
+                if (index >= 0)
+                {
+                    root = nodes[index];
+                    stack.Push(root);
+                    value = value.Slice(root.Item.Length);
+                    if (value.Length == 0)
+                    {
+                        length = 0;
+                        return true;
+                    }
+
+                    nodeComp = new NodeComparable(value);
+                }
+                else
+                {
+                    var mIndex = ~index;
+                    var readOnlySpan = value.Span;
+                    int lengthA;
+                    Node nodeA;
+                    bool aRes;
+                    if (mIndex == nodes.Length)
+                    {
+                        nodeA = null;
+                        lengthA = 0;
+                        aRes = false;
+                    }
+                    else
+                    {
+                        nodeA = nodes[mIndex];
+                        aRes = TryMatch(readOnlySpan, nodeA.Item.Span, out lengthA);
+                    }
+
+                    if (mIndex > 0)
+                    {
+                        var nodeB = nodes[mIndex - 1];
+                        var bRes = TryMatch(readOnlySpan, nodeB.Item.Span, out var lengthB);
+                        if (lengthB > lengthA)
+                        {
+                            length = lengthB;
+                            stack.Push(nodeB);
+                            return bRes;
+                        }
+                    }
+
+                    if (lengthA == 0)
+                    {
+                        length = index;
+                        return false;
+                    }
+
+                    length = lengthA;
+                    stack.Push(nodeA);
+                    return aRes;
+                }
+            }
+        }
+        
+        private interface INodeStack
+        {
+            void Push(Node node);
+            Node Pop();
+            int Count { get; }
+        }
+        
+        internal readonly struct NilNodeStack : INodeStack 
+        {
+            public void Push(Node node)
+            {}
+
+            public Node Pop() => null;
+
+            public int Count => 0;
+        }
+
+        internal struct LastNodeStack : INodeStack
+        {
+            private Node _node;
+            public void Push(Node node)
+            {
+                _node = node;
+            }
+
+            public Node Pop()
+            {
+                var x = _node;
+                _node = null;
+                return x;
+            }
+
+            public int Count => _node == null ? 0 : 1;
+        }
+        
+        public struct NodeStack : INodeStack , IEnumerable<Node>
+        {
+            private Node[] _nodes;
+            public int Count { get; private set; }
+            
+            public void Push(Node node)
+            {
+                if (_nodes.Length == Count)
+                {
+                    Array.Resize(ref _nodes, Count << 1);
+                }
+
+                _nodes[Count++] = node;
+            }
+
+            public Node Pop() 
+                => _nodes[--Count];
+
+            public Node Peek() 
+                => _nodes[Count - 1];
+            
+            public ReadOnlySpan<Node> Nodes => _nodes.AsSpan(0, Count);
+            
+            private IEnumerator<Node> GetEnumeratorC()
+            {
+                return _nodes.Take(Count).GetEnumerator();
+            }
+
+            IEnumerator<Node> IEnumerable<Node>.GetEnumerator()
+            {
+                return GetEnumeratorC();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumeratorC();
             }
         }
     }
