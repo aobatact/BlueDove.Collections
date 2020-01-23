@@ -48,7 +48,7 @@ namespace BlueDove.SlimCollections
 
 
         [DebuggerDisplay("({key}, {value})->{next}")]
-        private struct Entry
+        internal struct Entry
         {
             public TKey key;
             public TValue value;

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.Collections", "Blu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.Collections.Trees", "BlueDove.Collections.Trees\BlueDove.Collections.Trees.csproj", "{546777E6-D0DE-4205-AC97-23F332BF24F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.BinarySearches", "BlueDove.BinarySearches\BlueDove.BinarySearches.csproj", "{A40FDF42-F299-4379-B349-BA3C2D3043D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.Searches", "BlueDove.Searches\BlueDove.Searches.csproj", "{A40FDF42-F299-4379-B349-BA3C2D3043D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.Collections.Heaps", "BlueDove.Collections.Heaps\BlueDove.Collections.Heaps.csproj", "{E7D603AD-87F2-4826-9306-008A2F1C3F4B}"
 EndProject

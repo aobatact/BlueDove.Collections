@@ -78,23 +78,58 @@ namespace System
 }
 #endif
 
-namespace BlueDove.BinarySearches
+namespace BlueDove.Searches
 {
-    public static class BinarySearchRanges
+    public static class BinarySearcher
     {
-        public static Range BinarySearchRange<T, TComparable>(this ReadOnlySpan<T> values, TComparable comparable)
+        public static Range SearchRange<T, TComparable>(this ReadOnlySpan<T> values, TComparable comparable)
             where TComparable : IComparable<T> =>
-            BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
 
-        public static Range BinarySearchRange<T, TComparable>(this Span<T> values, TComparable comparable)
+        public static Range SearchRange<T, TComparable>(this Span<T> values, TComparable comparable)
             where TComparable : IComparable<T> =>
-            BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
 
-        public static Range BinarySearchRange<T>(this ReadOnlySpan<ReadOnlyMemory<T>> values, ReadOnlySpan<T> others)
+        public static Range SearchRange<T>(this ReadOnlySpan<ReadOnlyMemory<T>> values, ReadOnlySpan<T> others)
             where T : IComparable<T> =>
-            BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
                 default(ReadOnlyMemorySpanExtractor<T>));
 
+        /// <summary>
+        /// Gets the lower bound of the <see cref="comparable"/> in <see cref="values"/> (Included)
+        /// </summary>
+        /// <returns>Lower Bound (Included)</returns>
+        public static int LowerBound<T, TComparable>(this ReadOnlySpan<T> values, TComparable comparable)
+            where TComparable : IComparable<T>
+            => BinarySearchHelpers.LowerBound(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+
+        /// <summary>
+        /// Gets the lower bound of the <see cref="comparable"/> in <see cref="values"/> (Included)
+        /// </summary>
+        /// <returns>Lower Bound (Included)</returns>
+        public static int LowerBound<T, TComparable>(this Span<T> values, TComparable comparable)
+            where TComparable : IComparable<T>
+            => BinarySearchHelpers.LowerBound(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+
+        /// <summary>
+        /// Gets the upper bound of the <see cref="comparable"/> in <see cref="values"/> (Excluded)
+        /// </summary>
+        /// <returns>Upper Bound (Excluded)</returns>
+        public static int UpperBound<T, TComparable>(this ReadOnlySpan<T> values, TComparable comparable)
+            where TComparable : IComparable<T>
+            => BinarySearchHelpers.UpperBound(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+        
+        /// <summary>
+        /// Gets the upper bound of the <see cref="comparable"/> in <see cref="values"/> (Excluded)
+        /// </summary>
+        /// <returns>Upper Bound (Excluded)</returns>
+        public static int UpperBound<T, TComparable>(this Span<T> values, TComparable comparable)
+            where TComparable : IComparable<T>            
+            => BinarySearchHelpers.UpperBound(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+    }
+
+    public static class BinarySearchHelpers
+    {
         //Copied from corefx
         public static int BinarySearch<T, TComparable>(
             ref T spanStart, int length, TComparable comparable)
@@ -178,132 +213,59 @@ namespace BlueDove.BinarySearches
             ref T spanStart, int length, TComparable comparable)
             where TComparable : IComparable<T>
         {
-            int lo = 0;
-            int hi = length - 1;
-            int lhi;
-
-            #region FirstMatch
-
-            // If length == 0, hi == -1, and loop will not be entered
-            while (lo <= hi)
-            {
-                // PERF: `lo` or `hi` will never be negative inside the loop,
-                //       so computing median using uints is safe since we know 
-                //       `length <= int.MaxValue`, and indices are >= 0
-                //       and thus cannot overflow an uint. 
-                //       Saves one subtraction per loop compared to 
-                //       `int i = lo + ((hi - lo) >> 1);`
-                int i = (int) (((uint) hi + (uint) lo) >> 1);
-
-                int c = comparable.CompareTo(Unsafe.Add(ref spanStart, i));
-                if (c == 0)
-                {
-                    lhi = i;
-                    goto found;
-                }
-                else if (c > 0)
-                {
-                    lo = i + 1;
-                }
-                else
-                {
-                    hi = i - 1;
-                }
-            }
-
-            return new Range(lo, lo);
-
-            #endregion
-
-            found:
-
-            #region Lower
-
-            var hlo = lhi;
-            while (lhi > lo)
-            {
-                int i = (int) (((uint) lhi + (uint) lo) >> 1);
-                int c = comparable.CompareTo(Unsafe.Add(ref spanStart, i));
-                if (c >= 0)
-                {
-                    lhi = i;
-                }
-                else
-                {
-                    lo = i + 1;
-                }
-            }
-
-            #endregion
-
-            #region Upper
-
-            while (hi > hlo)
-            {
-                int i = (int) (((uint) lhi + (uint) lo) >> 1);
-                int c = comparable.CompareTo(Unsafe.Add(ref spanStart, i));
-                if (c <= 0)
-                {
-                    hlo = i;
-                }
-                else
-                {
-                    hi = i - 1;
-                }
-            }
-
-            #endregion
-
-            return new Range(lhi, hlo);
+            var firstMatch = BinarySearch(ref spanStart, length, comparable, out var lo, out var hi);
+            if (firstMatch < 0)
+                return new Range(~firstMatch, ~firstMatch);
+            return new Range(LowerBoundInner(ref spanStart, comparable, lo, firstMatch),
+                UpperBoundInner(ref spanStart, comparable, firstMatch, hi));
         }
 
-        public static int LowerBound<T, TComparable>(
-            ref T spanStart, int length, TComparable comparable)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int LowerBound<T, TComparable>(ref T spanStart, int length, TComparable comparable) 
             where TComparable : IComparable<T>
         {
-            int lo = 0;
-            int hi = length - 1;
-            // If length == 0, hi == -1, and loop will not be entered
-            while (hi - lo > 1)
+            var firstSearch = BinarySearch(ref spanStart, length, comparable, out var lo, out var hi);
+            return firstSearch < 0 ? firstSearch : LowerBoundInner(ref spanStart, comparable, lo, firstSearch);
+        }
+
+        public static int LowerBoundInner<T, TComparable>(ref T spanStart, TComparable comparable, int lo, int hi)
+            where TComparable : IComparable<T>
+        {
+            while (lo < hi)
             {
                 int i = (int) (((uint) hi + (uint) lo) >> 1);
                 int c = comparable.CompareTo(Unsafe.Add(ref spanStart, i));
-                if (c >= 0)
-                {
+                if (c == 0)
                     hi = i;
-                }
                 else
-                {
                     lo = i + 1;
-                }
             }
 
             return hi;
         }
 
-        public static int UpperBound<T, TComparable>(
-            ref T spanStart, int length, TComparable comparable)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int UpperBound<T, TComparable>(ref T spanStart, int length, TComparable comparable) 
             where TComparable : IComparable<T>
         {
-            int lo = 0;
-            int hi = length - 1;
-            // If length == 0, hi == -1, and loop will not be entered
-
-            while (hi > lo)
+            var firstSearch = BinarySearch(ref spanStart, length, comparable, out var lo, out var hi);
+            return firstSearch < 0 ? firstSearch : UpperBoundInner(ref spanStart, comparable, firstSearch, hi);
+        }
+        
+        public static int UpperBoundInner<T, TComparable>(ref T spanStart, TComparable comparable, int lo, int hi)
+            where TComparable : IComparable<T>
+        {
+            while (lo < hi)
             {
-                int i = (int) (((uint) hi + (uint) lo) >> 1);
+                int i = (int) (((uint) hi + (uint) lo + 1u) >> 1);
                 int c = comparable.CompareTo(Unsafe.Add(ref spanStart, i));
-                if (c <= 0)
-                {
+                if (c == 0)
                     lo = i;
-                }
                 else
-                {
                     hi = i - 1;
-                }
             }
 
-            return lo;
+            return lo + 1;
         }
 
         public static Range BinarySearchRange<T, TCollection, TSpanExtractor>(ref TCollection spanStart, int length,
@@ -332,7 +294,7 @@ namespace BlueDove.BinarySearches
                     lhi = i;
                     goto found;
                 }
-                else if (c > 0)
+                if (c > 0)
                 {
                     lo = i + 1;
                 }
@@ -388,10 +350,14 @@ namespace BlueDove.BinarySearches
             return new Range(lhi, hlo);
         }
     }
-    
     public interface ISpanExtractor<T, in TCollection>
     {
         ReadOnlySpan<T> ExtractSpan(TCollection collection);
+    }
+
+    public readonly struct ArraySpanExtractor<T> : ISpanExtractor<T, T[]>
+    {
+        public ReadOnlySpan<T> ExtractSpan(T[] collection) => new ReadOnlySpan<T>(collection);
     }
 
     public readonly struct MemorySpanExtractor<T> : ISpanExtractor<T, Memory<T>>
