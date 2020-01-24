@@ -8,7 +8,7 @@ using BenchmarkDotNet.Running;
 
 namespace BlueDove.SlimCollections.Bench
 {
-
+/*
     class Program
     {
         static void Main(string[] args)
@@ -158,4 +158,5 @@ namespace BlueDove.SlimCollections.Bench
         }
         
     }
+    */
 }
