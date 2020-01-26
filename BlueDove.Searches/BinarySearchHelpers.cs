@@ -73,51 +73,66 @@ namespace BlueDove.Searches
 {
     public static class BinarySearcher
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range SearchRange<T, TComparable>(this ReadOnlySpan<T> values, TComparable comparable)
             where TComparable : IComparable<T> =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+            BinarySearchHelpers.SearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range SearchRange<T, TComparable>(this Span<T> values, TComparable comparable)
             where TComparable : IComparable<T> =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
+            BinarySearchHelpers.SearchRange(ref MemoryMarshal.GetReference(values), values.Length, comparable);
 
         public static Range SearchRange<T>(this ReadOnlySpan<ReadOnlyMemory<T>> values, ReadOnlySpan<T> others)
             where T : IComparable<T> =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+            BinarySearchHelpers.SpanRangeSearch(ref MemoryMarshal.GetReference(values), values.Length, others,
                 default(ReadOnlyMemorySpanExtractor<T>));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range SearchRange<T>(this ReadOnlySpan<Memory<T>> values, ReadOnlySpan<T> others)
             where T : IComparable<T> =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+            BinarySearchHelpers.SpanRangeSearch(ref MemoryMarshal.GetReference(values), values.Length, others,
                 default(MemorySpanExtractor<T>));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range SearchRange<T>(this ReadOnlySpan<T[]> values, ReadOnlySpan<T> others)
             where T : IComparable<T> =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+            BinarySearchHelpers.SpanRangeSearch(ref MemoryMarshal.GetReference(values), values.Length, others,
                 default(ArraySpanExtractor<T>));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range SearchRange(this ReadOnlySpan<string> values, ReadOnlySpan<char> others) =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+            BinarySearchHelpers.SpanRangeSearch(ref MemoryMarshal.GetReference(values), values.Length, others,
                 default(StringSpanExtractor));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range SearchRange<T>(this Span<ReadOnlyMemory<T>> values, ReadOnlySpan<T> others)
+            where T : IComparable<T> =>
+            BinarySearchHelpers.SpanRangeSearch(ref MemoryMarshal.GetReference(values), values.Length, others,
+                default(ReadOnlyMemorySpanExtractor<T>));
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range SearchRange<T>(this Span<Memory<T>> values, ReadOnlySpan<T> others)
             where T : IComparable<T> =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+            BinarySearchHelpers.SpanRangeSearch(ref MemoryMarshal.GetReference(values), values.Length, others,
                 default(MemorySpanExtractor<T>));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range SearchRange<T>(this Span<T[]> values, ReadOnlySpan<T> others)
             where T : IComparable<T> =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+            BinarySearchHelpers.SpanRangeSearch(ref MemoryMarshal.GetReference(values), values.Length, others,
                 default(ArraySpanExtractor<T>));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Range SearchRange(this Span<string> values, ReadOnlySpan<char> others) =>
-            BinarySearchHelpers.BinarySearchRange(ref MemoryMarshal.GetReference(values), values.Length, others,
+            BinarySearchHelpers.SpanRangeSearch(ref MemoryMarshal.GetReference(values), values.Length, others,
                 default(StringSpanExtractor));
 
         /// <summary>
         /// Gets the lower bound of the <see cref="comparable"/> in <see cref="values"/> (Included)
         /// </summary>
         /// <returns>Lower Bound (Included)</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int LowerBound<T, TComparable>(this ReadOnlySpan<T> values, TComparable comparable)
             where TComparable : IComparable<T>
             => BinarySearchHelpers.LowerBound(ref MemoryMarshal.GetReference(values), values.Length, comparable);
@@ -126,6 +141,7 @@ namespace BlueDove.Searches
         /// Gets the lower bound of the <see cref="comparable"/> in <see cref="values"/> (Included)
         /// </summary>
         /// <returns>Lower Bound (Included)</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int LowerBound<T, TComparable>(this Span<T> values, TComparable comparable)
             where TComparable : IComparable<T>
             => BinarySearchHelpers.LowerBound(ref MemoryMarshal.GetReference(values), values.Length, comparable);
@@ -134,6 +150,7 @@ namespace BlueDove.Searches
         /// Gets the upper bound of the <see cref="comparable"/> in <see cref="values"/> (Excluded)
         /// </summary>
         /// <returns>Upper Bound (Excluded)</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int UpperBound<T, TComparable>(this ReadOnlySpan<T> values, TComparable comparable)
             where TComparable : IComparable<T>
             => BinarySearchHelpers.UpperBound(ref MemoryMarshal.GetReference(values), values.Length, comparable);
@@ -142,6 +159,7 @@ namespace BlueDove.Searches
         /// Gets the upper bound of the <see cref="comparable"/> in <see cref="values"/> (Excluded)
         /// </summary>
         /// <returns>Upper Bound (Excluded)</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int UpperBound<T, TComparable>(this Span<T> values, TComparable comparable)
             where TComparable : IComparable<T>
             => BinarySearchHelpers.UpperBound(ref MemoryMarshal.GetReference(values), values.Length, comparable);
@@ -150,6 +168,7 @@ namespace BlueDove.Searches
     public static class BinarySearchHelpers
     {
         //Copied from corefx
+        /*
         public static int BinarySearch<T, TComparable>(
             ref T spanStart, int length, TComparable comparable)
             where TComparable : IComparable<T>
@@ -188,13 +207,21 @@ namespace BlueDove.Searches
             // is `lo` at this point.
             return ~lo;
         }
+        */
 
-        public static int BinarySearch<T, TComparable>(
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static int FirstMatch<T, TComparable>(
             ref T spanStart, int length, TComparable comparable, out int lo, out int hi)
             where TComparable : IComparable<T>
         {
             lo = 0;
             hi = length - 1;
+            return FirstMatchInner(ref spanStart, comparable, ref lo, ref hi);
+        }
+
+        public static int FirstMatchInner<T, TComparable>(ref T spanStart, TComparable comparable, ref int lo, ref int hi)
+            where TComparable : IComparable<T>
+        {
             // If length == 0, hi == -1, and loop will not be entered
             while (lo <= hi)
             {
@@ -228,11 +255,12 @@ namespace BlueDove.Searches
             return ~lo;
         }
 
-        public static Range BinarySearchRange<T, TComparable>(
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Range SearchRange<T, TComparable>(
             ref T spanStart, int length, TComparable comparable)
             where TComparable : IComparable<T>
         {
-            var firstMatch = BinarySearch(ref spanStart, length, comparable, out var lo, out var hi);
+            var firstMatch = FirstMatch(ref spanStart, length, comparable, out var lo, out var hi);
             if (firstMatch < 0)
                 return new Range(~firstMatch, ~firstMatch);
             return new Range(LowerBoundInner(ref spanStart, comparable, lo, firstMatch),
@@ -243,7 +271,7 @@ namespace BlueDove.Searches
         public static int LowerBound<T, TComparable>(ref T spanStart, int length, TComparable comparable)
             where TComparable : IComparable<T>
         {
-            var firstSearch = BinarySearch(ref spanStart, length, comparable, out var lo, out var hi);
+            var firstSearch = FirstMatch(ref spanStart, length, comparable, out var lo, out var hi);
             return firstSearch < 0 ? firstSearch : LowerBoundInner(ref spanStart, comparable, lo, firstSearch);
         }
 
@@ -268,7 +296,7 @@ namespace BlueDove.Searches
         public static int UpperBound<T, TComparable>(ref T spanStart, int length, TComparable comparable)
             where TComparable : IComparable<T>
         {
-            var firstSearch = BinarySearch(ref spanStart, length, comparable, out var lo, out var hi);
+            var firstSearch = FirstMatch(ref spanStart, length, comparable, out var lo, out var hi);
             return firstSearch < 0 ? firstSearch : UpperBoundInner(ref spanStart, comparable, firstSearch, hi);
         }
 
@@ -289,7 +317,7 @@ namespace BlueDove.Searches
             return lo + 1;
         }
 
-        public static Range BinarySearchRange<T, TCollection, TSpanExtractor>(ref TCollection spanStart, int length,
+        public static Range SpanRangeSearch<T, TCollection, TSpanExtractor>(ref TCollection spanStart, int length,
             ReadOnlySpan<T> values, TSpanExtractor extractor) where T : IComparable<T>
             where TSpanExtractor : ISpanExtractor<T, TCollection>
         {
@@ -366,30 +394,5 @@ namespace BlueDove.Searches
 
             return new Range(lhi, hlo + 1);
         }
-    }
-
-    public interface ISpanExtractor<T, in TCollection>
-    {
-        ReadOnlySpan<T> ExtractSpan(TCollection collection);
-    }
-
-    public readonly struct ArraySpanExtractor<T> : ISpanExtractor<T, T[]>
-    {
-        public ReadOnlySpan<T> ExtractSpan(T[] collection) => new ReadOnlySpan<T>(collection);
-    }
-
-    public readonly struct MemorySpanExtractor<T> : ISpanExtractor<T, Memory<T>>
-    {
-        public ReadOnlySpan<T> ExtractSpan(Memory<T> collection) => collection.Span;
-    }
-
-    public readonly struct ReadOnlyMemorySpanExtractor<T> : ISpanExtractor<T, ReadOnlyMemory<T>>
-    {
-        public ReadOnlySpan<T> ExtractSpan(ReadOnlyMemory<T> collection) => collection.Span;
-    }
-
-    public readonly struct StringSpanExtractor : ISpanExtractor<char, string>
-    {
-        public ReadOnlySpan<char> ExtractSpan(string collection) => collection.AsSpan();
     }
 }

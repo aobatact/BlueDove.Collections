@@ -60,8 +60,8 @@ namespace BlueDove.Searches.Tests
         public void ExtractRangeTest(string[] values, string value, int lo, int hi)
         {
             var res = values.AsSpan().SearchRange("a".AsSpan());
-            Assert.Equal(lo,res.Start.Value);
-            Assert.Equal(hi,res.End.Value);
+            Assert.Equal(lo, res.Start.Value);
+            Assert.Equal(hi, res.End.Value);
         }
     }
 }
