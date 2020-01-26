@@ -29,45 +29,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-#if NETSTANDARD2_0
-namespace System
-{
-    public readonly struct Range
-    {
-        public Range(int start, int end)
-        {
-            Start = start;
-            End = end;
-        }
 
-        public Index Start { get; }
-        public Index End { get; }
-    }
-
-
-    public readonly struct Index
-    {
-        private readonly int _value;
-
-        public Index(int value) { _value = value; }
-
-        public int Value
-        {
-            get
-            {
-                if (this._value < 0)
-                    return ~this._value;
-                return this._value;
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Index FromStart(int value) { return new Index(value); }
-
-        public static implicit operator Index(int value) { return Index.FromStart(value); }
-    }
-}
-#endif
 
 namespace BlueDove.Searches
 {

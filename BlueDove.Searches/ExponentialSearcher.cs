@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace BlueDove.Searches
 {
-    public static class ExponentialSearcherHelper
+    public static class ExponentialSearchHelper
     {
         public static int FirstMatch<T, TComparable>(ref T spanStart, int length, TComparable comparable, out int lo,
             out int hi) where TComparable : IComparable<T>
@@ -25,7 +25,8 @@ namespace BlueDove.Searches
                         lo = hi >> 1;
                         return BinarySearchHelpers.FirstMatchInner(ref spanStart, comparable, ref lo, ref hi);
                     }
-                    /*  // c == 0
+                    // c == 0
+                    /*  //getting the closest hi of pow2
                     int f;
                     lo = (f = hi) >> 1;
                     {
