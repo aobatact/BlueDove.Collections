@@ -2,8 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>netcoreapp3.0</TargetFramework>
-        <AssemblyName>BinarySearches</AssemblyName>
-        <RootNamespace>BinarySearches</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BlueDove.Searches\BlueDove.Searches.csproj" />
+    </ItemGroup>
 
 </Project>

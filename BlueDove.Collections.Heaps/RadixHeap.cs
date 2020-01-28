@@ -4,35 +4,44 @@ using System.Runtime.CompilerServices;
 
 namespace BlueDove.Collections.Heaps
 {
-    public class RadixHeap<T, TConverter> : IHeap<T> 
+    public class RadixHeap<T, TConverter> : IHeap<T>
         where T : IComparable<T> where TConverter : struct, IUnsignedValueConverter<T>
     {
         private readonly T[][] _buffers;
         private readonly int[] _bufferSizes;
         private T Last { get; set; }
         public int Count { get; private set; }
-        
+
         public void Clear()
         {
             Count = 0;
             for (var i = 0; i < _bufferSizes.Length; i++)
             {
+                ref var bufferSize = ref _bufferSizes[i];
+#if NETSTANDARD2_0
+                foreach (var inner in _buffers)
+                {
+                    for (int j = 0; j < inner.Length; j++)
+                    {
+                        inner[j] = default(T);
+                    }
+                }
+#else
                 if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
                 {
-                    _buffers.AsSpan().Fill(null);
+                    _buffers[i].AsSpan().Fill(default);
                 }
-                _bufferSizes[i] = 0;
+#endif
+                bufferSize = 0;
             }
         }
 
         public RadixHeap()
         {
+            Debug.Assert(Unsafe.SizeOf<TConverter>() == 0);
             var bufferSize = default(TConverter).BufferSize();
             _buffers = new T[bufferSize][];
-            for (var index = 0; index < _buffers.Length; index++)
-            {
-                _buffers[index] = Array.Empty<T>();
-            }
+            for (var index = 0; index < _buffers.Length; index++) _buffers[index] = Array.Empty<T>();
 
             _bufferSizes = new int[bufferSize];
         }
@@ -49,10 +58,9 @@ namespace BlueDove.Collections.Heaps
         public T Pop()
         {
             if (TryPop(out var val))
-            {
                 return val;
-            }
-            BufferUtil.ThrowNoItem();
+
+            Util.ThrowNoItem();
             return default;
         }
 
@@ -64,6 +72,7 @@ namespace BlueDove.Collections.Heaps
                 value = default;
                 return false;
             }
+
             Pull();
             value = Last;
             Count--;
@@ -84,37 +93,40 @@ namespace BlueDove.Collections.Heaps
             value = Last;
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Peek()
         {
-            if (Count == 0)
-            {
-                BufferUtil.ThrowNoItem();
-            }
+            if (Count == 0) Util.ThrowNoItem();
+
             Pull();
             return Last;
         }
-        
+
         private void Pull()
         {
             Debug.Assert(Count > 0);
             if (_bufferSizes[0] != 0) return;
             var i = 0;
-            while (_bufferSizes[++i] != 0)
+            while (_bufferSizes[++i] != 0) Debug.Assert(i + 1 < _buffers.Length);
+#if NETSTANDARD2_0
+            var buffer = _buffers[0];
+            var min = buffer[0];
+            var bufferSize = _bufferSizes[i];
+            for (int j = 0; j < bufferSize; j++)
             {
-                Debug.Assert(i + 1 < _buffers.Length);
+                if (min.CompareTo(buffer[j]) > 0)
+                {
+                    min = buffer[j];
+                }
             }
-
+#else
             var buffer = _buffers[i].AsSpan(0, _bufferSizes[i]);
-            var nl = Min(buffer);
-            foreach (var t in buffer)
-            {
-                Add2Buffer(t, default(TConverter).GetIndex(nl, t));
-            }
-
+            var min = Min(buffer);
+            foreach (var t in buffer) Add2Buffer(t, default(TConverter).GetIndex(min, t));
+#endif
             _bufferSizes[i] = 0;
-            Last = nl;
+            Last = min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -123,134 +135,20 @@ namespace BlueDove.Collections.Heaps
             Debug.Assert(target < _buffers.Length);
             ref var buffer = ref _buffers[target];
             ref var bfs = ref _bufferSizes[target];
-            if (buffer.Length == bfs)
-            { 
-                BufferUtil.Expand(ref buffer);
-            }
-            
+            if (buffer.Length == bfs) Util.Expand(ref buffer);
             buffer[bfs++] = value;
         }
-        
+
+#if !NETSTANDARD2_0
         private static T Min(Span<T> buffer)
         {
             var min = buffer[0];
             foreach (var value in buffer)
-            {
                 if (min.CompareTo(value) > 0)
-                {
                     min = value;
-                }
-            }
 
             return min;
         }
-
-    }
-
-    public class InHeapRadixHeap<T, THeap, TConverter> : IHeap<T>
-        where T : IComparable<T> where THeap : IHeap<T> where TConverter : struct, IUnsignedValueConverter<T>
-    {
-        private readonly THeap[] _innerHeaps;
-
-        public InHeapRadixHeap(Func<THeap> factory)
-        {
-            _innerHeaps = new THeap[default(TConverter).BufferSize()];
-            for (var i = 0; i < _innerHeaps.Length; i++)
-            {
-                _innerHeaps[i] = factory();
-            }
-        }
-
-        private T Last { get; set; }
-        
-        public void Push(T value)
-        {
-            Debug.Assert(Last.CompareTo(value) <= 0);
-            Count++;
-            var target = default(TConverter).GetIndex(Last, value);
-            Add2Buffer(value, target);
-        }
-
-        private void Add2Buffer(T value, int target)
-        {
-            _innerHeaps[target].Push(value);
-        }
-        
-        public T Pop()
-        {            
-            if (!TryPop(out var val))
-            {
-                return val;
-            }
-            BufferUtil.ThrowNoItem();
-            return default;
-        }
-
-        public bool TryPop(out T value)
-        {            
-            if (Count == 0)
-            {
-                value = default;
-                return false;
-            }
-            Pull();
-            value = Last;
-            Count--;
-            return true;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Peek()
-        {
-            if (Count == 0)
-            {
-                BufferUtil.ThrowNoItem();
-            }
-            Pull();
-            return Last;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool TryPeek(out T value)
-        {
-            if (Count == 0)
-            {
-                value = default;
-                return false;
-            }
-
-            Pull();
-            value = Last;
-            return true;
-        }
-        
-        private void Pull()
-        {
-            Debug.Assert(Count > 0);
-            if(_innerHeaps[0].Count > 0) return;
-            var i = 0;
-            while (_innerHeaps[++i].Count != 0)
-            {
-                Debug.Assert(i + 1 < _innerHeaps.Length);
-            }
-
-            var nl = _innerHeaps[i].Pop();
-            while (_innerHeaps[i].TryPop(out var value))
-            {
-                Add2Buffer(value, default(TConverter).GetIndex(Last, value));
-            }
-
-            Last = nl;
-        }
-
-        public int Count { get; private set; }
-        public void Clear()
-        {
-            Count = 0;
-            foreach (var heap in _innerHeaps)
-            {
-                heap.Clear();
-            }
-        }
+#endif
     }
 }

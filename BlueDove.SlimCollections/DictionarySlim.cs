@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace BlueDove.SlimCollections
@@ -37,6 +38,7 @@ namespace BlueDove.SlimCollections
         // The first add will cause a resize replacing these with real arrays of three elements.
         // Arrays are wrapped in a class to avoid being duplicated for each <TKey, TValue>
         private static readonly Entry[] InitialEntries = new Entry[1];
+        
         private int _count;
         // 0-based index into _entries of head of free chain: -1 means empty
         private int _freeList = -1;
@@ -46,7 +48,7 @@ namespace BlueDove.SlimCollections
 
 
         [DebuggerDisplay("({key}, {value})->{next}")]
-        private struct Entry
+        internal struct Entry
         {
             public TKey key;
             public TValue value;
@@ -261,7 +263,10 @@ namespace BlueDove.SlimCollections
             }
             else
             {
-                if (_count == entries.Length || entries.Length == 1)
+                //if (_count == (entries.Length >> 2) + (entries.Length >> 1))
+                //if (_count == entries.Length - (entries.Length >> 3))
+                if (_count == HashHelpers.LoadFactor[BitOperations.Log2((uint)entries.Length)])
+                //if (_count == entries.Length || entries.Length == 1)
                 {
                     entries = Resize();
                     bucketIndex = key.GetHashCode() & (_buckets.Length - 1);

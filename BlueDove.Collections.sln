@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.Collections", "Blu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.Collections.Trees", "BlueDove.Collections.Trees\BlueDove.Collections.Trees.csproj", "{546777E6-D0DE-4205-AC97-23F332BF24F0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BinarySearches", "BinarySearches\BinarySearches.csproj", "{A40FDF42-F299-4379-B349-BA3C2D3043D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.Searches", "BlueDove.Searches\BlueDove.Searches.csproj", "{A40FDF42-F299-4379-B349-BA3C2D3043D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.Collections.Heaps", "BlueDove.Collections.Heaps\BlueDove.Collections.Heaps.csproj", "{E7D603AD-87F2-4826-9306-008A2F1C3F4B}"
 EndProject
@@ -16,6 +16,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlueDove.VectorMath", "BlueDove.VectorMath\BlueDove.VectorMath.csproj", "{9A222981-72FF-4CBC-BDBD-46838CDE5AD5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.VectorMath.CodeGenerator", "BlueDove.VectorMath.CodeGenerator\BlueDove.VectorMath.CodeGenerator.csproj", "{04BAA15A-686A-40FF-A319-81602021065F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.Matrices", "BlueDove.Matrices\BlueDove.Matrices.csproj", "{239148F3-A1ED-4A94-8829-A3C5E44325FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.Sorts", "BlueDove.Sorts\BlueDove.Sorts.csproj", "{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.Collections.Tests", "BlueDove.Collections.Tests\BlueDove.Collections.Tests.csproj", "{10DCD7AD-9955-405D-B5B0-64280202711A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.SlimCollections.Bench", "BlueDove.SlimCollections.Bench\BlueDove.SlimCollections.Bench.csproj", "{FCE22ED6-046A-4AFE-A625-FB31B1358D5E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueDove.StringDictionaries", "BlueDove.StringDictionaries\BlueDove.StringDictionaries.csproj", "{E39B65C3-3F22-46AF-A00E-EB5B510F33D9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +61,26 @@ Global
 		{04BAA15A-686A-40FF-A319-81602021065F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04BAA15A-686A-40FF-A319-81602021065F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04BAA15A-686A-40FF-A319-81602021065F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{239148F3-A1ED-4A94-8829-A3C5E44325FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{239148F3-A1ED-4A94-8829-A3C5E44325FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{239148F3-A1ED-4A94-8829-A3C5E44325FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{239148F3-A1ED-4A94-8829-A3C5E44325FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB6EFE7F-31AA-4C52-B0E7-04898DACF5E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10DCD7AD-9955-405D-B5B0-64280202711A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10DCD7AD-9955-405D-B5B0-64280202711A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10DCD7AD-9955-405D-B5B0-64280202711A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10DCD7AD-9955-405D-B5B0-64280202711A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCE22ED6-046A-4AFE-A625-FB31B1358D5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCE22ED6-046A-4AFE-A625-FB31B1358D5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCE22ED6-046A-4AFE-A625-FB31B1358D5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCE22ED6-046A-4AFE-A625-FB31B1358D5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E39B65C3-3F22-46AF-A00E-EB5B510F33D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E39B65C3-3F22-46AF-A00E-EB5B510F33D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E39B65C3-3F22-46AF-A00E-EB5B510F33D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E39B65C3-3F22-46AF-A00E-EB5B510F33D9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

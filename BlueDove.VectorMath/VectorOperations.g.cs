@@ -8,78 +8,162 @@ namespace BlueDove.VectorMath
 {
     public static partial class VectorOperations
     {
-        
-        public static void Add(ReadOnlySpan<float> l, ReadOnlySpan<float> r, Span<float> target)
-            => OperationBase<float, FloatAddAvx, FloatAddSse, FloatAdd>(l, r, target);
 
-        public static void Subtract(ReadOnlySpan<float> l, ReadOnlySpan<float> r, Span<float> target)
-            => OperationBase<float, FloatSubtractAvx, FloatSubtractSse, FloatSubtract>(l, r, target);
+        public static void Add(ReadOnlySpan<float> left, ReadOnlySpan<float> right, Span<float> target)
+            => OperationBase<float, FloatAddAvx, FloatAddSse, FloatAdd>(left, right, target);
 
-        public static void Multiply(ReadOnlySpan<float> l, ReadOnlySpan<float> r, Span<float> target)
-            => OperationBase<float, FloatMultiplyAvx, FloatMultiplySse, FloatMultiply>(l, r, target);
+        public static void Subtract(ReadOnlySpan<float> left, ReadOnlySpan<float> right, Span<float> target)
+            => OperationBase<float, FloatSubtractAvx, FloatSubtractSse, FloatSubtract>(left, right, target);
 
-        public static void Divide(ReadOnlySpan<float> l, ReadOnlySpan<float> r, Span<float> target)
-            => OperationBase<float, FloatDivideAvx, FloatDivideSse, FloatDivide>(l, r, target);
+        public static void Multiply(ReadOnlySpan<float> left, ReadOnlySpan<float> right, Span<float> target)
+            => OperationBase<float, FloatMultiplyAvx, FloatMultiplySse, FloatMultiply>(left, right, target);
 
-        public static void Add(ReadOnlySpan<double> l, ReadOnlySpan<double> r, Span<double> target)
-            => OperationBase<double, DoubleAddAvx, DoubleAddSse2, DoubleAdd>(l, r, target);
+        public static void Divide(ReadOnlySpan<float> left, ReadOnlySpan<float> right, Span<float> target)
+            => OperationBase<float, FloatDivideAvx, FloatDivideSse, FloatDivide>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<double> l, ReadOnlySpan<double> r, Span<double> target)
-            => OperationBase<double, DoubleSubtractAvx, DoubleSubtractSse2, DoubleSubtract>(l, r, target);
+        public static void Add(ReadOnlySpan<double> left, ReadOnlySpan<double> right, Span<double> target)
+            => OperationBase<double, DoubleAddAvx, DoubleAddSse2, DoubleAdd>(left, right, target);
 
-        public static void Multiply(ReadOnlySpan<double> l, ReadOnlySpan<double> r, Span<double> target)
-            => OperationBase<double, DoubleMultiplyAvx, DoubleMultiplySse2, DoubleMultiply>(l, r, target);
+        public static void Subtract(ReadOnlySpan<double> left, ReadOnlySpan<double> right, Span<double> target)
+            => OperationBase<double, DoubleSubtractAvx, DoubleSubtractSse2, DoubleSubtract>(left, right, target);
 
-        public static void Divide(ReadOnlySpan<double> l, ReadOnlySpan<double> r, Span<double> target)
-            => OperationBase<double, DoubleDivideAvx, DoubleDivideSse2, DoubleDivide>(l, r, target);
+        public static void Multiply(ReadOnlySpan<double> left, ReadOnlySpan<double> right, Span<double> target)
+            => OperationBase<double, DoubleMultiplyAvx, DoubleMultiplySse2, DoubleMultiply>(left, right, target);
 
-        public static void Add(ReadOnlySpan<sbyte> l, ReadOnlySpan<sbyte> r, Span<sbyte> target)
-            => OperationBase<sbyte, SByteAddAvx2, NilOperator<Vector128<sbyte>>, SByteAdd>(l, r, target);
+        public static void Divide(ReadOnlySpan<double> left, ReadOnlySpan<double> right, Span<double> target)
+            => OperationBase<double, DoubleDivideAvx, DoubleDivideSse2, DoubleDivide>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<sbyte> l, ReadOnlySpan<sbyte> r, Span<sbyte> target)
-            => OperationBase<sbyte, SByteSubtractAvx2, NilOperator<Vector128<sbyte>>, SByteSubtract>(l, r, target);
+        public static void Add(ReadOnlySpan<sbyte> left, ReadOnlySpan<sbyte> right, Span<sbyte> target)
+            => OperationBase<sbyte, SByteAddAvx2, SByteAddSse2, SByteAdd>(left, right, target);
 
-        public static void Add(ReadOnlySpan<byte> l, ReadOnlySpan<byte> r, Span<byte> target)
-            => OperationBase<byte, ByteAddAvx2, NilOperator<Vector128<byte>>, ByteAdd>(l, r, target);
+        public static void Subtract(ReadOnlySpan<sbyte> left, ReadOnlySpan<sbyte> right, Span<sbyte> target)
+            => OperationBase<sbyte, SByteSubtractAvx2, SByteSubtractSse2, SByteSubtract>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<byte> l, ReadOnlySpan<byte> r, Span<byte> target)
-            => OperationBase<byte, ByteSubtractAvx2, NilOperator<Vector128<byte>>, ByteSubtract>(l, r, target);
+        public static void And(ReadOnlySpan<sbyte> left, ReadOnlySpan<sbyte> right, Span<sbyte> target)
+            => OperationBase<sbyte, SByteAndAvx2, SByteAndSse2, SByteAnd>(left, right, target);
 
-        public static void Add(ReadOnlySpan<short> l, ReadOnlySpan<short> r, Span<short> target)
-            => OperationBase<short, ShortAddAvx2, NilOperator<Vector128<short>>, ShortAdd>(l, r, target);
+        public static void Or(ReadOnlySpan<sbyte> left, ReadOnlySpan<sbyte> right, Span<sbyte> target)
+            => OperationBase<sbyte, SByteOrAvx2, SByteOrSse2, SByteOr>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<short> l, ReadOnlySpan<short> r, Span<short> target)
-            => OperationBase<short, ShortSubtractAvx2, NilOperator<Vector128<short>>, ShortSubtract>(l, r, target);
+        public static void Xor(ReadOnlySpan<sbyte> left, ReadOnlySpan<sbyte> right, Span<sbyte> target)
+            => OperationBase<sbyte, SByteXorAvx2, SByteXorSse2, SByteXor>(left, right, target);
 
-        public static void Add(ReadOnlySpan<ushort> l, ReadOnlySpan<ushort> r, Span<ushort> target)
-            => OperationBase<ushort, UShortAddAvx2, NilOperator<Vector128<ushort>>, UShortAdd>(l, r, target);
+        public static void Add(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right, Span<byte> target)
+            => OperationBase<byte, ByteAddAvx2, ByteAddSse2, ByteAdd>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<ushort> l, ReadOnlySpan<ushort> r, Span<ushort> target)
-            => OperationBase<ushort, UShortSubtractAvx2, NilOperator<Vector128<ushort>>, UShortSubtract>(l, r, target);
+        public static void Subtract(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right, Span<byte> target)
+            => OperationBase<byte, ByteSubtractAvx2, ByteSubtractSse2, ByteSubtract>(left, right, target);
 
-        public static void Add(ReadOnlySpan<int> l, ReadOnlySpan<int> r, Span<int> target)
-            => OperationBase<int, IntAddAvx2, NilOperator<Vector128<int>>, IntAdd>(l, r, target);
+        public static void And(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right, Span<byte> target)
+            => OperationBase<byte, ByteAndAvx2, ByteAndSse2, ByteAnd>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<int> l, ReadOnlySpan<int> r, Span<int> target)
-            => OperationBase<int, IntSubtractAvx2, NilOperator<Vector128<int>>, IntSubtract>(l, r, target);
+        public static void Or(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right, Span<byte> target)
+            => OperationBase<byte, ByteOrAvx2, ByteOrSse2, ByteOr>(left, right, target);
 
-        public static void Add(ReadOnlySpan<uint> l, ReadOnlySpan<uint> r, Span<uint> target)
-            => OperationBase<uint, UIntAddAvx2, NilOperator<Vector128<uint>>, UIntAdd>(l, r, target);
+        public static void Xor(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right, Span<byte> target)
+            => OperationBase<byte, ByteXorAvx2, ByteXorSse2, ByteXor>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<uint> l, ReadOnlySpan<uint> r, Span<uint> target)
-            => OperationBase<uint, UIntSubtractAvx2, NilOperator<Vector128<uint>>, UIntSubtract>(l, r, target);
+        public static void Add(ReadOnlySpan<short> left, ReadOnlySpan<short> right, Span<short> target)
+            => OperationBase<short, ShortAddAvx2, ShortAddSse2, ShortAdd>(left, right, target);
 
-        public static void Add(ReadOnlySpan<long> l, ReadOnlySpan<long> r, Span<long> target)
-            => OperationBase<long, LongAddAvx2, NilOperator<Vector128<long>>, LongAdd>(l, r, target);
+        public static void Subtract(ReadOnlySpan<short> left, ReadOnlySpan<short> right, Span<short> target)
+            => OperationBase<short, ShortSubtractAvx2, ShortSubtractSse2, ShortSubtract>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<long> l, ReadOnlySpan<long> r, Span<long> target)
-            => OperationBase<long, LongSubtractAvx2, NilOperator<Vector128<long>>, LongSubtract>(l, r, target);
+        public static void And(ReadOnlySpan<short> left, ReadOnlySpan<short> right, Span<short> target)
+            => OperationBase<short, ShortAndAvx2, ShortAndSse2, ShortAnd>(left, right, target);
 
-        public static void Add(ReadOnlySpan<ulong> l, ReadOnlySpan<ulong> r, Span<ulong> target)
-            => OperationBase<ulong, ULongAddAvx2, NilOperator<Vector128<ulong>>, ULongAdd>(l, r, target);
+        public static void Or(ReadOnlySpan<short> left, ReadOnlySpan<short> right, Span<short> target)
+            => OperationBase<short, ShortOrAvx2, ShortOrSse2, ShortOr>(left, right, target);
 
-        public static void Subtract(ReadOnlySpan<ulong> l, ReadOnlySpan<ulong> r, Span<ulong> target)
-            => OperationBase<ulong, ULongSubtractAvx2, NilOperator<Vector128<ulong>>, ULongSubtract>(l, r, target);
+        public static void Xor(ReadOnlySpan<short> left, ReadOnlySpan<short> right, Span<short> target)
+            => OperationBase<short, ShortXorAvx2, ShortXorSse2, ShortXor>(left, right, target);
+
+        public static void Add(ReadOnlySpan<ushort> left, ReadOnlySpan<ushort> right, Span<ushort> target)
+            => OperationBase<ushort, UShortAddAvx2, UShortAddSse2, UShortAdd>(left, right, target);
+
+        public static void Subtract(ReadOnlySpan<ushort> left, ReadOnlySpan<ushort> right, Span<ushort> target)
+            => OperationBase<ushort, UShortSubtractAvx2, UShortSubtractSse2, UShortSubtract>(left, right, target);
+
+        public static void And(ReadOnlySpan<ushort> left, ReadOnlySpan<ushort> right, Span<ushort> target)
+            => OperationBase<ushort, UShortAndAvx2, UShortAndSse2, UShortAnd>(left, right, target);
+
+        public static void Or(ReadOnlySpan<ushort> left, ReadOnlySpan<ushort> right, Span<ushort> target)
+            => OperationBase<ushort, UShortOrAvx2, UShortOrSse2, UShortOr>(left, right, target);
+
+        public static void Xor(ReadOnlySpan<ushort> left, ReadOnlySpan<ushort> right, Span<ushort> target)
+            => OperationBase<ushort, UShortXorAvx2, UShortXorSse2, UShortXor>(left, right, target);
+
+        public static void Add(ReadOnlySpan<int> left, ReadOnlySpan<int> right, Span<int> target)
+            => OperationBase<int, IntAddAvx2, IntAddSse2, IntAdd>(left, right, target);
+
+        public static void Subtract(ReadOnlySpan<int> left, ReadOnlySpan<int> right, Span<int> target)
+            => OperationBase<int, IntSubtractAvx2, IntSubtractSse2, IntSubtract>(left, right, target);
+
+        public static void And(ReadOnlySpan<int> left, ReadOnlySpan<int> right, Span<int> target)
+            => OperationBase<int, IntAndAvx2, IntAndSse2, IntAnd>(left, right, target);
+
+        public static void Or(ReadOnlySpan<int> left, ReadOnlySpan<int> right, Span<int> target)
+            => OperationBase<int, IntOrAvx2, IntOrSse2, IntOr>(left, right, target);
+
+        public static void Xor(ReadOnlySpan<int> left, ReadOnlySpan<int> right, Span<int> target)
+            => OperationBase<int, IntXorAvx2, IntXorSse2, IntXor>(left, right, target);
+
+        public static void AndNot(ReadOnlySpan<int> left, ReadOnlySpan<int> right, Span<int> target)
+            => OperationBase<int, IntAndNotAvx2, IntAndNotSse2, IntAndNot>(left, right, target);
+
+        public static void Add(ReadOnlySpan<uint> left, ReadOnlySpan<uint> right, Span<uint> target)
+            => OperationBase<uint, UIntAddAvx2, UIntAddSse2, UIntAdd>(left, right, target);
+
+        public static void Subtract(ReadOnlySpan<uint> left, ReadOnlySpan<uint> right, Span<uint> target)
+            => OperationBase<uint, UIntSubtractAvx2, UIntSubtractSse2, UIntSubtract>(left, right, target);
+
+        public static void And(ReadOnlySpan<uint> left, ReadOnlySpan<uint> right, Span<uint> target)
+            => OperationBase<uint, UIntAndAvx2, UIntAndSse2, UIntAnd>(left, right, target);
+
+        public static void Or(ReadOnlySpan<uint> left, ReadOnlySpan<uint> right, Span<uint> target)
+            => OperationBase<uint, UIntOrAvx2, UIntOrSse2, UIntOr>(left, right, target);
+
+        public static void Xor(ReadOnlySpan<uint> left, ReadOnlySpan<uint> right, Span<uint> target)
+            => OperationBase<uint, UIntXorAvx2, UIntXorSse2, UIntXor>(left, right, target);
+
+        public static void AndNot(ReadOnlySpan<uint> left, ReadOnlySpan<uint> right, Span<uint> target)
+            => OperationBase<uint, UIntAndNotAvx2, UIntAndNotSse2, UIntAndNot>(left, right, target);
+
+        public static void Add(ReadOnlySpan<long> left, ReadOnlySpan<long> right, Span<long> target)
+            => OperationBase<long, LongAddAvx2, LongAddSse2, LongAdd>(left, right, target);
+
+        public static void Subtract(ReadOnlySpan<long> left, ReadOnlySpan<long> right, Span<long> target)
+            => OperationBase<long, LongSubtractAvx2, LongSubtractSse2, LongSubtract>(left, right, target);
+
+        public static void And(ReadOnlySpan<long> left, ReadOnlySpan<long> right, Span<long> target)
+            => OperationBase<long, LongAndAvx2, LongAndSse2, LongAnd>(left, right, target);
+
+        public static void Or(ReadOnlySpan<long> left, ReadOnlySpan<long> right, Span<long> target)
+            => OperationBase<long, LongOrAvx2, LongOrSse2, LongOr>(left, right, target);
+
+        public static void Xor(ReadOnlySpan<long> left, ReadOnlySpan<long> right, Span<long> target)
+            => OperationBase<long, LongXorAvx2, LongXorSse2, LongXor>(left, right, target);
+
+        public static void AndNot(ReadOnlySpan<long> left, ReadOnlySpan<long> right, Span<long> target)
+            => OperationBase<long, LongAndNotAvx2, LongAndNotSse2, LongAndNot>(left, right, target);
+
+        public static void Add(ReadOnlySpan<ulong> left, ReadOnlySpan<ulong> right, Span<ulong> target)
+            => OperationBase<ulong, ULongAddAvx2, ULongAddSse2, ULongAdd>(left, right, target);
+
+        public static void Subtract(ReadOnlySpan<ulong> left, ReadOnlySpan<ulong> right, Span<ulong> target)
+            => OperationBase<ulong, ULongSubtractAvx2, ULongSubtractSse2, ULongSubtract>(left, right, target);
+
+        public static void And(ReadOnlySpan<ulong> left, ReadOnlySpan<ulong> right, Span<ulong> target)
+            => OperationBase<ulong, ULongAndAvx2, ULongAndSse2, ULongAnd>(left, right, target);
+
+        public static void Or(ReadOnlySpan<ulong> left, ReadOnlySpan<ulong> right, Span<ulong> target)
+            => OperationBase<ulong, ULongOrAvx2, ULongOrSse2, ULongOr>(left, right, target);
+
+        public static void Xor(ReadOnlySpan<ulong> left, ReadOnlySpan<ulong> right, Span<ulong> target)
+            => OperationBase<ulong, ULongXorAvx2, ULongXorSse2, ULongXor>(left, right, target);
+
+        public static void AndNot(ReadOnlySpan<ulong> left, ReadOnlySpan<ulong> right, Span<ulong> target)
+            => OperationBase<ulong, ULongAndNotAvx2, ULongAndNotSse2, ULongAndNot>(left, right, target);
     }
 }
 
