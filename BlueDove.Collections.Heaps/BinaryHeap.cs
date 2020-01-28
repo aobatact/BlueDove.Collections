@@ -1,6 +1,6 @@
 using System;
 using System.Runtime.CompilerServices;
-#if !NET_STANDARD_2_0
+
 namespace BlueDove.Collections.Heaps
 {
     /// <summary>
@@ -67,7 +67,15 @@ namespace BlueDove.Collections.Heaps
         
         public void Clear()
         {
-            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) Array.Fill(_values, default);
+#if NETSTANDARD2_0
+            for (var i = 0; i < _values.Length; i++)
+            {
+                _values[i] = default(T);
+            }
+#else 
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+                Array.Fill(_values, default(T));
+#endif 
             Count = 0;
         }
 
@@ -128,4 +136,3 @@ namespace BlueDove.Collections.Heaps
         }
     }
 }
-#endif

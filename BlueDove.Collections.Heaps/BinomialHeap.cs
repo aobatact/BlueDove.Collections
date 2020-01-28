@@ -5,10 +5,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-#if !NET_STANDARD_2_0
 
 namespace BlueDove.Collections.Heaps
 {
+#if !NETSTANDARD2_0
     public class ArrayBinomialHeap<T> : IHeap<T>
         where T : IComparable<T>
     {
@@ -410,5 +410,5 @@ namespace BlueDove.Collections.Heaps
             Count = 0;
         }
     }
-}
 #endif
+}

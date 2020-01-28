@@ -265,7 +265,7 @@ namespace BlueDove.Collections
                 {
                 }
             }
-            
+
             public int Count => _keyedTable.Key1Count;
         }
     }

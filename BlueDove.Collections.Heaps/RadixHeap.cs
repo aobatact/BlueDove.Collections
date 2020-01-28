@@ -17,10 +17,22 @@ namespace BlueDove.Collections.Heaps
             Count = 0;
             for (var i = 0; i < _bufferSizes.Length; i++)
             {
-                if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) 
-                    _buffers.AsSpan().Fill(null);
-
-                _bufferSizes[i] = 0;
+                ref var bufferSize = ref _bufferSizes[i];
+#if NETSTANDARD2_0
+                foreach (var inner in _buffers)
+                {
+                    for (int j = 0; j < inner.Length; j++)
+                    {
+                        inner[j] = default(T);
+                    }
+                }
+#else
+                if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+                {
+                    _buffers[i].AsSpan().Fill(default);
+                }
+#endif
+                bufferSize = 0;
             }
         }
 
@@ -97,13 +109,24 @@ namespace BlueDove.Collections.Heaps
             if (_bufferSizes[0] != 0) return;
             var i = 0;
             while (_bufferSizes[++i] != 0) Debug.Assert(i + 1 < _buffers.Length);
-
+#if NETSTANDARD2_0
+            var buffer = _buffers[0];
+            var min = buffer[0];
+            var bufferSize = _bufferSizes[i];
+            for (int j = 0; j < bufferSize; j++)
+            {
+                if (min.CompareTo(buffer[j]) > 0)
+                {
+                    min = buffer[j];
+                }
+            }
+#else
             var buffer = _buffers[i].AsSpan(0, _bufferSizes[i]);
-            var nl = Min(buffer);
-            foreach (var t in buffer) Add2Buffer(t, default(TConverter).GetIndex(nl, t));
-
+            var min = Min(buffer);
+            foreach (var t in buffer) Add2Buffer(t, default(TConverter).GetIndex(min, t));
+#endif
             _bufferSizes[i] = 0;
-            Last = nl;
+            Last = min;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -116,6 +139,7 @@ namespace BlueDove.Collections.Heaps
             buffer[bfs++] = value;
         }
 
+#if !NETSTANDARD2_0
         private static T Min(Span<T> buffer)
         {
             var min = buffer[0];
@@ -125,5 +149,6 @@ namespace BlueDove.Collections.Heaps
 
             return min;
         }
+#endif
     }
 }

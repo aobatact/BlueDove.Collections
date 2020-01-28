@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\BlueDove.Collections.Heaps\BlueDove.Collections.Heaps.csproj" />
       <ProjectReference Include="..\BlueDove.StringDictionaries\BlueDove.StringDictionaries.csproj" />
       <ProjectReference Include="..\BlueDove.VectorMath\BlueDove.VectorMath.csproj" />
     </ItemGroup>

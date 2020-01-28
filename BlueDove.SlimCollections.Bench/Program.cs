@@ -1,5 +1,5 @@
 ﻿extern alias LF;
-extern alias NoLF;
+//extern alias NoLF;
 
 using System;
 using System.Collections.Generic;
@@ -8,18 +8,20 @@ using BenchmarkDotNet.Running;
 
 namespace BlueDove.SlimCollections.Bench
 {
-/*
+
     class Program
     {
         static void Main(string[] args)
         {
+            /*
             //var d = new LF::BlueDove.SlimCollections.DictionarySlim<int, int>();
             //var d2 = new NoLF::BlueDove.SlimCollections.DictionarySlim<int, int>();
             //BenchmarkRunner.Run<IntIntAddBench>();
             BenchmarkRunner.Run<IntIntSearchBench>();
+            */
         }
     }
-
+/*
     public sealed class AddBenchBase<TKey,TValue> where TKey:IEquatable<TKey>
     {
         public AddBenchBase()
