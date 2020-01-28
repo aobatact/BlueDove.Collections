@@ -7,7 +7,7 @@ namespace BlueDove.Collections.Tests
 {
     public class HeapTest
     {
-        public static void HeapTryTestHelper<T, THeap>(THeap heap, IEnumerable<T> data, T max) where THeap : IHeap<T>
+        internal static void HeapTryTestHelper<T, THeap>(THeap heap, IEnumerable<T> data, T max) where THeap : IHeap<T>
             where T : IComparable<T>
         {
             var min = max;
@@ -32,8 +32,8 @@ namespace BlueDove.Collections.Tests
                 prev = current;
             }
         }
-        
-        public static void HeapTestHelper<T, THeap>(THeap heap, IEnumerable<T> data, T max) where THeap : IHeap<T>
+
+        internal static void HeapTestHelper<T, THeap>(THeap heap, IEnumerable<T> data, T max) where THeap : IHeap<T>
             where T : IComparable<T>
         {
             var min = max;
@@ -60,7 +60,7 @@ namespace BlueDove.Collections.Tests
             }
         }
         
-        public static IEnumerable<object[]> IntTestInputs(int lengthMax = 100, int count = 10)
+        internal static IEnumerable<object[]> IntTestInputs(int lengthMax = 100, int count = 10)
         {
             var random = new Random();
             for (int i = 0; i < count; i++)
@@ -77,7 +77,6 @@ namespace BlueDove.Collections.Tests
 
         [Theory]
         [InlineData(new int[]{1,3,556,34,6,44,332,4,3456,346,342,5,32,3,3,3,0,0,0})]
-        //[MemberData(nameof(IntTestInputs),129,100)]
         public void ArrayBinaryHeapTest<T>(IEnumerable<int> data)
         {
             HeapTestHelper(new ArrayBinaryHeap<int>(), data, int.MaxValue);
