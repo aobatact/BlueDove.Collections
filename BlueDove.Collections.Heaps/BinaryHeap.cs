@@ -11,6 +11,8 @@ namespace BlueDove.Collections.Heaps
         where T : IComparable<T>
     {
         private T[] _values;
+        private const int MinIndex = 0;
+        private const int Move = (MinIndex - 1);
 
         public ArrayBinaryHeap()
         {
@@ -19,23 +21,27 @@ namespace BlueDove.Collections.Heaps
 
         public void Push(T value)
         {
-            if (Count >= _values.Length) BufferUtil.Expand(ref _values);
+            if (++Count >= _values.Length) Util.Expand(ref _values);
 
-            CascadeUp(value, Count++);
+            CascadeUp(value, Count);
         }
 
         public T Peek()
         {
-            if (Count != 0) return _values[0];
-            BufferUtil.ThrowNoItem();
+            if (Count != 0) return _values[MinIndex];
+            Util.ThrowNoItem();
             return default;
         }
 
         public T Pop()
         {            
-            if (Count == 0) BufferUtil.ThrowNoItem();
-            var ret = _values[0];
+            if (Count == 0) Util.ThrowNoItem();
+            var ret = _values[MinIndex];
             CascadeDown(_values[--Count], Count);
+            /*
+            CascadeDown(_values[Count], Count);
+            Count--;
+            */
             return ret;
         }
 
@@ -47,7 +53,7 @@ namespace BlueDove.Collections.Heaps
                 return false;
             }
 
-            value = _values[0];
+            value = _values[MinIndex];
             return true;
         }
         
@@ -58,8 +64,12 @@ namespace BlueDove.Collections.Heaps
                 value = default;
                 return false;
             }
-            value = _values[0];
+            value = _values[MinIndex];
             CascadeDown(_values[--Count], Count);
+            /*
+            CascadeDown(_values[Count], Count);
+            Count--;
+            */
             return true;
         }
 
@@ -82,7 +92,7 @@ namespace BlueDove.Collections.Heaps
         private void CascadeUp(T value, int oldIndex)
         {
             ref var currentPos = ref _values[oldIndex];
-            var uIndex = (oldIndex - 1) >> 1;
+            var uIndex = (oldIndex + Move) >> 1;
             ref var upperPos = ref _values[uIndex];
             
             while (value.CompareTo(upperPos) < 0)
@@ -91,7 +101,7 @@ namespace BlueDove.Collections.Heaps
                 currentPos = ref upperPos;
                 if(oldIndex == 0) break;
                 oldIndex = uIndex;
-                uIndex = (oldIndex - 1) >> 1;
+                uIndex = (oldIndex + Move) >> 1;
                 upperPos = ref _values[uIndex];
             }
 
@@ -103,7 +113,7 @@ namespace BlueDove.Collections.Heaps
             ref var cur = ref _values[oldIndex];
             while (true)
             {
-                var dl = (oldIndex << 1) + 1;
+                var dl = (oldIndex << 1) + Move;
                 var dr = dl + 1;
                 if (dr < Count)
                 {

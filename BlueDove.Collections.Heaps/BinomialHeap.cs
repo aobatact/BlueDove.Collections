@@ -141,14 +141,14 @@ namespace BlueDove.Collections.Heaps
         public T Peek()
         {
             var (index, minValue) = MinSearch();
-            if (index == -1) BufferUtil.ThrowNoItem();
+            if (index == -1) Util.ThrowNoItem();
             return minValue;
         }
 
         public T Pop()
         {
             var (index, value) = MinSearch();
-            if (index == -1) BufferUtil.ThrowNoItem();
+            if (index == -1) Util.ThrowNoItem();
             Merge(_values, _values[index], 32);
             Count--;
             return value;
@@ -335,13 +335,13 @@ namespace BlueDove.Collections.Heaps
 
         public T Peek()
         {
-            if(root == null) BufferUtil.ThrowNoItem();
+            if(root == null) Util.ThrowNoItem();
             return SearchMin(out _).Data;
         }
 
         public T Pop()
         {
-            if (root == null) BufferUtil.ThrowNoItem();
+            if (root == null) Util.ThrowNoItem();
             var min = SearchMin(out var prev);
             if (prev != null)
             {

@@ -60,8 +60,7 @@ namespace BlueDove.Collections.Tests
             }
         }
         
-        public static IEnumerable<object[]> IntTestInputs<THeap>( int lengthMax = 100, int count = 10)
-            where THeap : new()
+        public static IEnumerable<object[]> IntTestInputs(int lengthMax = 100, int count = 10)
         {
             var random = new Random();
             for (int i = 0; i < count; i++)
@@ -72,20 +71,16 @@ namespace BlueDove.Collections.Tests
                 {
                     values[j] = random.Next();
                 }
-                yield return new object[] {new THeap(), values};
+                yield return new object[] {values};
             }
         }
 
-        public static IEnumerable<object[]> IntArrayBinaryHeapTest(int lengthMax, int count)
-        {
-            return IntTestInputs<ArrayBinaryHeap<int>>( lengthMax, count);
-        }
-
         [Theory]
-        [MemberData((nameof(IntArrayBinaryHeapTest)),129,100)]
-        public void ArrayBinaryHeapTest<T>(ArrayBinaryHeap<int> heap, IEnumerable<int> data)
+        [InlineData(new int[]{1,3,556,34,6,44,332,4,3456,346,342,5,32,3,3,3,0,0,0})]
+        //[MemberData(nameof(IntTestInputs),129,100)]
+        public void ArrayBinaryHeapTest<T>(IEnumerable<int> data)
         {
-            HeapTestHelper(heap, data, int.MaxValue);
+            HeapTestHelper(new ArrayBinaryHeap<int>(), data, int.MaxValue);
         }
         
     }

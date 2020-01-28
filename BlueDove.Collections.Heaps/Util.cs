@@ -4,27 +4,29 @@ using System.Runtime.CompilerServices;
 
 namespace BlueDove.Collections.Heaps
 {
-    internal static class BufferUtil
+    internal static class Util
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static void Expand<T>(ref T[] buffer)
         {
-            /*
-            var nl = (uint)buffer.Length << 1;
-            var nBuffer = new T[nl <= (uint) int.MaxValue ? nl :
-                nl + (uint)(buffer.Length >> 1) <= (uint) int.MaxValue ? nl + (buffer.Length >> 1) : int.MaxValue];
-            buffer.AsSpan().CopyTo(nBuffer);
-            buffer = nBuffer;
-            */
-            Array.Resize(ref buffer, buffer.Length << 1);
+            var newSize = buffer.Length << 1;
+            if ((uint) newSize > int.MaxValue)
+                newSize = int.MaxValue;
+            Array.Resize(ref buffer, newSize);
         }
-        
+
 #if !NETSTANDARD2_0
         [DoesNotReturn]
 #endif
         public static void ThrowNoItem()
         {
             throw new InvalidOperationException("No Items in Heap");
+        }
+
+        public static bool ReturnNoItem<T>(out T item)
+        {
+            item = default;
+            return false;
         }
     }
     

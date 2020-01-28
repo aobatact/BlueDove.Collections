@@ -60,7 +60,7 @@ namespace BlueDove.Collections.Heaps
             if (TryPop(out var val))
                 return val;
 
-            BufferUtil.ThrowNoItem();
+            Util.ThrowNoItem();
             return default;
         }
 
@@ -97,7 +97,7 @@ namespace BlueDove.Collections.Heaps
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Peek()
         {
-            if (Count == 0) BufferUtil.ThrowNoItem();
+            if (Count == 0) Util.ThrowNoItem();
 
             Pull();
             return Last;
@@ -135,7 +135,7 @@ namespace BlueDove.Collections.Heaps
             Debug.Assert(target < _buffers.Length);
             ref var buffer = ref _buffers[target];
             ref var bfs = ref _bufferSizes[target];
-            if (buffer.Length == bfs) BufferUtil.Expand(ref buffer);
+            if (buffer.Length == bfs) Util.Expand(ref buffer);
             buffer[bfs++] = value;
         }
 
