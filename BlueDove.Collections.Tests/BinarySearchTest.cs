@@ -59,7 +59,7 @@ namespace BlueDove.Searches.Tests
         [InlineData(new[] {"a", "a", "ab", "b"}, "a", 0, 2)]
         public void ExtractRangeTest(string[] values, string value, int lo, int hi)
         {
-            var res = values.AsSpan().SearchRange("a".AsSpan());
+            var res = values.AsSpan().SearchRange(value.AsSpan());
             Assert.Equal(lo, res.Start.Value);
             Assert.Equal(hi, res.End.Value);
         }

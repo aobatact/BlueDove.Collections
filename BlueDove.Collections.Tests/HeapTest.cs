@@ -31,6 +31,7 @@ namespace BlueDove.Collections.Tests
                 Assert.True(prev.CompareTo(current) <= 0);
                 prev = current;
             }
+            Assert.Equal(0, heap.Count);
         }
 
         internal static void HeapTestHelper<T, THeap>(THeap heap, IEnumerable<T> data, T max) where THeap : IHeap<T>
@@ -55,7 +56,7 @@ namespace BlueDove.Collections.Tests
             {
                 var current = heap.Pop();
                 Assert.Equal(--count, heap.Count);
-                Assert.True(prev.CompareTo(current) <= 0);
+                Assert.True(prev.CompareTo(current) <= 0, $" {prev} <= {current} ");
                 prev = current;
             }
         }
@@ -76,10 +77,43 @@ namespace BlueDove.Collections.Tests
         }
 
         [Theory]
-        [InlineData(new int[]{1,3,556,34,6,44,332,4,3456,346,342,5,32,3,3,3,0,0,0})]
-        public void ArrayBinaryHeapTest<T>(IEnumerable<int> data)
+        [InlineData(new[]{0})]
+        [InlineData(new[]{1,2,3,5,6,7})]
+        [InlineData(new[]{1,2,4,6,8,4,5,3,3,5,7,5,4})]
+        [InlineData(new[]{1,3,556,34,6,44,332,4,3456,346,342,5,32,3,3,3,0,0,0})]
+        public void ArrayBinaryHeapTest(IEnumerable<int> data)
         {
             HeapTestHelper(new ArrayBinaryHeap<int>(), data, int.MaxValue);
+        }
+
+        [Theory]
+        [InlineData(new[]{0})]
+        [InlineData(new[]{1,2,3,5,6,7})]
+        [InlineData(new[]{1,2,4,6,8,4,5,3,3,5,7,5,4})]
+        [InlineData(new[]{1,3,556,34,6,44,332,4,3456,346,342,5,32,3,3,3,0,0,0})]        
+        public void ArrayBinaryHeapTryTest(IEnumerable<int> data)
+        {
+            HeapTryTestHelper(new ArrayBinaryHeap<int>(), data, int.MaxValue);
+        }
+        
+        [Theory]
+        [InlineData(new[]{0})]
+        [InlineData(new[]{1,2,3,5,6,7})]
+        [InlineData(new[]{1,2,4,6,8,4,5,3,3,5,7,5,4})]
+        [InlineData(new[]{1,3,556,34,6,44,332,4,3456,346,342,5,32,3,3,3,0,0,0})]
+        public void RadixHeapTest(IEnumerable<int> data)
+        {
+            HeapTestHelper(new RadixHeap<int,IntValueConverter>(), data, int.MaxValue);
+        }
+
+        [Theory]
+        [InlineData(new[]{0})]
+        [InlineData(new[]{1,2,3,5,6,7})]
+        [InlineData(new[]{1,2,4,6,8,4,5,3,3,5,7,5,4})]
+        [InlineData(new[]{1,3,556,34,6,44,332,4,3456,346,342,5,32,3,3,3,0,0,0})]        
+        public void RadixHeapTryTest(IEnumerable<int> data)
+        {
+            HeapTryTestHelper(new RadixHeap<int, IntValueConverter>(), data, int.MaxValue);
         }
         
     }
