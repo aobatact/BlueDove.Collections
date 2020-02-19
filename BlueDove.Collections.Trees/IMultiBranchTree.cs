@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 namespace BlueDove.Collections.Trees
@@ -8,24 +9,33 @@ namespace BlueDove.Collections.Trees
         T Root { get; }
     }
 
-    public interface IMultiBranchTree<out T> : IMultiBranchTree<T, IEnumerable<T>> where T : IMultiBranchTreeNode<T>
-    {
-    }
-    
-    public interface IMultiBranchTreeNode<out T, out TChildren> where T : IMultiBranchTreeNode<T,TChildren> where TChildren : IEnumerable<T>
+    public interface IMultiBranchTreeNode<out T, out TChildren> where T : IMultiBranchTreeNode<T, TChildren>
+        where TChildren : IEnumerable<T>
     {
         TChildren Children { get; }
         bool IsLeaf { get; }
     }
 
-    public interface IMultiBranchTreeNode<out T> : IMultiBranchTreeNode<T, IEnumerable<T>>
-        where T : IMultiBranchTreeNode<T>
+    public interface IMultiBranchTreeNode<TValue, out T, out TChildren> : IMultiBranchTreeNode<T, TChildren>
+        where T : IMultiBranchTreeNode<TValue, T, TChildren> where TChildren : IEnumerable<T>
     {
+        TValue Value { get; set; }
     }
 
     public interface IEnumerable<out T, out TEnumerator> : IEnumerable<T>
         where TEnumerator : IEnumerator<T>
     {
         new TEnumerator GetEnumerator();
+    }
+
+    public struct GeneralEnumerableWrapper<T, TEnumerable> : IEnumerable<T, IEnumerator<T>>
+        where TEnumerable : IEnumerable<T>
+    {
+        private TEnumerable _enumerable;
+        IEnumerator<T> IEnumerable<T, IEnumerator<T>>.GetEnumerator() => _enumerable.GetEnumerator();
+
+        IEnumerator<T> IEnumerable<T>.GetEnumerator() => _enumerable.GetEnumerator();
+
+        IEnumerator IEnumerable.GetEnumerator() => _enumerable.GetEnumerator();
     }
 }

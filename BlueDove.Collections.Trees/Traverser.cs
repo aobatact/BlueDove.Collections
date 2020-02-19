@@ -1,25 +1,44 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Threading;
 
 namespace BlueDove.Collections.Trees
 {
     public static class Traverser
     {
-        public static IEnumerable<T> PreOrder<T, TChildren>(IMultiBranchTree<T, TChildren> tree)
-            where T : IMultiBranchTreeNode<T, TChildren> where TChildren : IEnumerable<T>
-            => PreOrder<T, TChildren, NilPredicator<T>, NilPredicator<T>>(tree, default, default);
-
-        public static IEnumerable<T> PreOrder<T, TChildren, TPredicator, TPrunePredicator>(
-            IMultiBranchTree<T, TChildren> tree,
-            TPredicator predicate, TPrunePredicator prunePredicator)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> PreOrder<TTree, T, TChildren, TEnumerator>(this TTree tree)
+            where TTree : IMultiBranchTree<T, TChildren>
             where T : IMultiBranchTreeNode<T, TChildren>
-            where TPredicator : IPredicator<T>
-            where TChildren : IEnumerable<T>
-            where TPrunePredicator : IPredicator<T>
+            where TChildren : IEnumerable<T, TEnumerator>
+            where TEnumerator : IEnumerator<T>
+            => PreOrder<TTree, T, TChildren, TEnumerator, NotNullPredicate<T>>(tree, default);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> PreOrder<TTree, T, TChildren, TEnumerator, TPredicate>(
+            this TTree tree, TPredicate predicate)
+            where TTree : IMultiBranchTree<T, TChildren>
+            where T : IMultiBranchTreeNode<T, TChildren>
+            where TPredicate : IPredicate<T>
+            where TChildren : IEnumerable<T, TEnumerator>
+            where TEnumerator : IEnumerator<T>
+            => PreOrder<TTree, T, TChildren, TEnumerator, TPredicate, NotNullPredicate<T>>(tree, predicate,
+                default);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> PreOrder<TTree, T, TChildren, TEnumerator, TPredicate, TPrunePredicate>(
+            this TTree tree, TPredicate predicate, TPrunePredicate prunePredicate)
+            where TTree : IMultiBranchTree<T, TChildren>
+            where T : IMultiBranchTreeNode<T, TChildren>
+            where TPredicate : IPredicate<T>
+            where TChildren : IEnumerable<T, TEnumerator>
+            where TEnumerator : IEnumerator<T>
+            where TPrunePredicate : IPredicate<T>
         {
-            return new PreOrderEnumerator<T, TChildren, TPredicator, TPrunePredicator>(tree, predicate,
-                prunePredicator);
+            return new PreOrderEnumerator<T, TChildren, TEnumerator, TPredicate, TPrunePredicate>(tree.Root, predicate,
+                prunePredicate);
             /*
             var target = tree.Root;
             if (predicate.Predicate(target)) yield return target;
@@ -62,54 +81,48 @@ namespace BlueDove.Collections.Trees
             */
         }
 
-        private class PreOrderEnumerator<T, TChildren, TPredicator, TPrunePredicator> : IEnumerable<T>, IEnumerator<T>
+        private class PreOrderEnumerator<T, TChildren, TEnumerator, TPredicate, TPrunePredicate> : IEnumerable<T>, IEnumerator<T>
             where T : IMultiBranchTreeNode<T, TChildren>
-            where TChildren : IEnumerable<T>
-            where TPredicator : IPredicator<T>
-            where TPrunePredicator : IPredicator<T>
+            where TChildren : IEnumerable<T, TEnumerator>
+            where TEnumerator : IEnumerator<T>
+            where TPredicate : IPredicate<T>
+            where TPrunePredicate : IPredicate<T>
         {
-            private TPredicator _predicator;
-            private TPrunePredicator _prunePredicator;
-            private IEnumerator<T>[] _stack;
+            private TPredicate _predicate;
+            private TPrunePredicate _prunePredicate;
+            private TEnumerator[] _stack;
             private int _state;//stackCount
-            private IEnumerator<T> _enumerator;
+            private TEnumerator _enumerator;
             public T Current { get; private set; }
+            private readonly T root;
 
-            public PreOrderEnumerator(IMultiBranchTree<T, TChildren> tree, TPredicator predicator,
-                TPrunePredicator prunePredicator)
+            public PreOrderEnumerator(T root, TPredicate predicate, TPrunePredicate prunePredicate)
             {
-                Current = tree.Root;
-                this._predicator = predicator;
-                this._prunePredicator = prunePredicator;
-                _stack = new IEnumerator<T>[4];
+                Current = this.root = root;
+                _predicate = predicate;
+                _prunePredicate = prunePredicate;
+                _stack = new TEnumerator[4];
                 _state = -1;
             }
 
             public bool MoveNext()
             {
-                switch (_state)
+                if (_state < 0)
                 {
-                    case -1:
-                        _state = -2;
-                        if (_predicator.Predicate(Current))
-                        {
+                    if (MoveNextInitStates())
+                    {
+                        if (_state != 0)
                             return true;
-                        }
-                        goto case -2;
-                    case -2:
-                        if (Current.IsLeaf || _prunePredicator.Predicate(Current))
-                            return false;
-                        _enumerator = Current.Children.GetEnumerator();
-                        _state = 0;
-                        break;
+                    }
+                    else
+                        return false;
                 }
-
                 while (true)
                 {
                     while (_enumerator.MoveNext())
                     {
                         Current = _enumerator.Current;
-                        if (!Current.IsLeaf && !_prunePredicator.Predicate(Current))
+                        if (!_prunePredicate.Predicate(Current) && !Current.IsLeaf)
                         {
                             if (_state == _stack.Length)
                             {
@@ -118,48 +131,84 @@ namespace BlueDove.Collections.Trees
                             _stack[_state++] = _enumerator;
                             _enumerator = Current.Children.GetEnumerator();
                         }
-                        if (_predicator.Predicate(Current))
+                        if (_predicate.Predicate(Current))
                             return true;
                     }
-
-                    if (_state == 0)
+                        
+                    _enumerator.Dispose();
+                    if (_state != 0)
+                        _enumerator = _stack[--_state];
+                    else
                         return false;
-                    _enumerator = _stack[--_state];
                 }
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            private bool MoveNextInitStates()
+            {
+                string msg;
+                switch (_state)
+                {
+                    case -1:
+                        msg = "Not Initialized as Enumerator. Call GetEnumerator() before MoveNext";
+                        break;
+                    case -2:
+                        _state = -3;
+                        if (_predicate.Predicate(Current))
+                            return true;
+                        goto case -3;
+                    case -3:
+                        if (_prunePredicate.Predicate(Current) || Current.IsLeaf)
+                            return false;
+                        _enumerator = Current.Children.GetEnumerator();
+                        _state = 0;
+                        return true;
+                    case -4:
+                        msg = "PreOrderEnumerator has been Disposed";
+                        break;
+                    case int.MinValue:
+                        msg = "State Stack Overflows";
+                        break;
+                    default:
+                        msg = "Invalid State";
+                        break;
+                }
+                throw new InvalidOperationException(msg);
             }
 
             void IDisposable.Dispose()
             {
-                if (_state <= 0) return;
-                foreach (var enumerator in _stack.AsSpan(0, _state))
-                {
-                    enumerator.Dispose();
-                }
+                if (_state > 0)
+                    foreach (var enumerator in _stack.AsSpan(0, _state))
+                        enumerator.Dispose();
+                _stack = null;
+                _state = -4;
             }
-            
+
             void IEnumerator.Reset()
             {
-                throw new NotSupportedException();
+                Current = root;
+                _state = -2;
             }
 
             object IEnumerator.Current => Current;
+
             public IEnumerator<T> GetEnumerator()
             {
-                if(_state != -1)
-                    throw new InvalidOperationException();
-                return this;
+                if (Interlocked.CompareExchange(ref _state, -2, -1) == -1 ||
+                    Interlocked.CompareExchange(ref _state, -2, -4) == -4)
+                    return this;
+                return new PreOrderEnumerator<T, TChildren, TEnumerator, TPredicate, TPrunePredicate>(root,
+                    _predicate, _prunePredicate);
             }
 
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
-            }
+            IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
-        
-        public static IEnumerable<T> PostOrder<T, TChildren, TPredicator>(IMultiBranchTree<T, TChildren> tree,
-            TPredicator predicate)
+
+        public static IEnumerable<T> PostOrder<T, TChildren, TPredicate>(IMultiBranchTree<T, TChildren> tree,
+            TPredicate predicate)
             where T : IMultiBranchTreeNode<T, TChildren>
-            where TPredicator : IPredicator<T>
+            where TPredicate : IPredicate<T>
             where TChildren : IEnumerable<T>
         {
             var target = tree.Root;
@@ -211,10 +260,10 @@ namespace BlueDove.Collections.Trees
             }
         }
 
-        public static IEnumerable<T> BreadthFirst<T, TChildren, TPredicator>(IMultiBranchTree<T, TChildren> tree,
-            TPredicator predicate) where T : IMultiBranchTreeNode<T, TChildren>
+        public static IEnumerable<T> BreadthFirst<T, TChildren, TPredicate>(IMultiBranchTree<T, TChildren> tree,
+            TPredicate predicate) where T : IMultiBranchTreeNode<T, TChildren>
             where TChildren : IEnumerable<T>
-            where TPredicator : IPredicator<T>
+            where TPredicate : IPredicate<T>
         {
             var target = tree.Root;
             yield return target;

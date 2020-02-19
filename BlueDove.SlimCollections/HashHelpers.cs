@@ -6,6 +6,9 @@
 
 using System;
 using System.Diagnostics;
+#if !NETSTANDARD2_0 && !NETSTANDARD2_1
+using System.Runtime.Intrinsics.X86;
+#endif
 
 namespace BlueDove.SlimCollections
 {
@@ -49,6 +52,10 @@ namespace BlueDove.SlimCollections
         internal static int PowerOf2(int v)
         {
             if ((v & (v - 1)) == 0) return v;
+#if !NETSTANDARD2_0 && !NETSTANDARD2_1
+            if(Lzcnt.IsSupported)
+                return 2 << (int)Lzcnt.LeadingZeroCount((uint)v);
+#endif
             int i = 2;
             while (i < v) i <<= 1;
             return i;

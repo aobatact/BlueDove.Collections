@@ -42,7 +42,6 @@ namespace BlueDove.Collections.Heaps
             var bufferSize = default(TConverter).BufferSize();
             _buffers = new T[bufferSize][];
             for (var index = 0; index < _buffers.Length; index++) _buffers[index] = Array.Empty<T>();
-
             _bufferSizes = new int[bufferSize];
         }
 
