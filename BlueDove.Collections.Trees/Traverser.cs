@@ -173,7 +173,9 @@ namespace BlueDove.Collections.Trees
                         msg = "Invalid State";
                         break;
                 }
-                throw new InvalidOperationException(msg);
+                static void Thrower(string s) { throw new InvalidOperationException(s); }
+                Thrower(msg);
+                return false;
             }
 
             void IDisposable.Dispose()

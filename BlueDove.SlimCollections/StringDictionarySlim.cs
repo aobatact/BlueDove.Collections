@@ -56,28 +56,8 @@ namespace BlueDove.SlimCollections
         /// </summary>
         /// <param name="key">Key to look for</param>
         /// <returns>true if the key is present, otherwise false</returns>
-        public bool ContainsKey(ReadOnlySpan<char> key)
-        {
-            //if (key is null) ThrowHelper.ThrowKeyArgumentNullException();
-            Entry[] entries = _entries;
-            int collisionCount = 0;
-            //string.GetHashCode(key);
-            for (int i = _buckets[string.GetHashCode(key) & (_buckets.Length-1)] - 1;
-                    (uint)i < (uint)entries.Length; i = entries[i].next)
-            {
-                if (key.SequenceEqual(entries[i].key))
-                    return true;
-                if (collisionCount == entries.Length)
-                {
-                    // The chain of entries forms a loop; which means a concurrent update has happened.
-                    // Break out of the loop and throw, rather than looping forever.
-                    ThrowHelper.ThrowInvalidOperationException_ConcurrentOperationsNotSupported();
-                }
-                collisionCount++;
-            }
-
-            return false;
-        }
+        public bool ContainsKey(ReadOnlySpan<char> key) 
+            => TryGetValue(key, out _);
 
         /// <summary>
         /// Gets the value if present for the specified key.
