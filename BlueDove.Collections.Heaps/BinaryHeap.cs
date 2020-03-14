@@ -24,7 +24,7 @@ namespace BlueDove.Collections.Heaps
         {
             if (Count >= _values.Length) Util.Expand(ref _values);
 
-            CascadeUp(value, Count++);
+            CascadeUp(value, Count);
         }
 
         public T Peek()

@@ -39,12 +39,12 @@ namespace BlueDove.SlimCollections
         // Arrays are wrapped in a class to avoid being duplicated for each <TKey, TValue>
         private static readonly Entry[] InitialEntries = new Entry[1];
         
-        private int _count;
+        protected int _count;
         // 0-based index into _entries of head of free chain: -1 means empty
-        private int _freeList = -1;
+        protected int _freeList = -1;
         // 1-based index into _entries; 0 means empty
-        private int[] _buckets;
-        private Entry[] _entries;
+        protected int[] _buckets;
+        private protected Entry[] _entries;
 
 
         [DebuggerDisplay("({key}, {value})->{next}")]
@@ -252,7 +252,7 @@ namespace BlueDove.SlimCollections
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private ref TValue AddKey(TKey key, int bucketIndex)
+        protected ref TValue AddKey(TKey key, int bucketIndex)
         {
             Entry[] entries = _entries;
             int entryIndex;
@@ -265,8 +265,8 @@ namespace BlueDove.SlimCollections
             {
                 //if (_count == (entries.Length >> 2) + (entries.Length >> 1))
                 //if (_count == entries.Length - (entries.Length >> 3))
-                if (_count == HashHelpers.LoadFactor[BitOperations.Log2((uint)entries.Length)])
-                //if (_count == entries.Length || entries.Length == 1)
+                //if (_count == HashHelpers.LoadFactor[BitOperations.Log2((uint)entries.Length)])
+                if (_count == entries.Length || entries.Length == 1)
                 {
                     entries = Resize();
                     bucketIndex = key.GetHashCode() & (_buckets.Length - 1);
@@ -284,7 +284,7 @@ namespace BlueDove.SlimCollections
 
         private Entry[] Resize()
         {
-            Debug.Assert(_entries.Length == _count || _entries.Length == 1); // We only copy _count, so if it's longer we will miss some
+            //Debug.Assert(_entries.Length == _count || _entries.Length == 1); // We only copy _count, so if it's longer we will miss some
             int count = _count;
             int newSize = _entries.Length * 2;
             if ((uint)newSize > (uint)int.MaxValue) // uint cast handles overflow

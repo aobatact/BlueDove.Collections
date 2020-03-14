@@ -20,7 +20,7 @@ namespace BlueDove.Searches
                         continue;
                     }
 
-                    if (c != 0) // c < 0
+                    if (c < 0) // c != 0
                     {
                         lo = hi >> 1;
                         return BinarySearchHelpers.FirstMatchInner(ref spanStart, comparable, ref lo, ref hi);
